@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3215.robot;
+package org.usfirst.frc.team3215.robot.config;
 
 /**
  * Available autonomous modes. Add/remove autonomous modes here before coding them.
@@ -7,6 +7,7 @@ package org.usfirst.frc.team3215.robot;
 public enum AutonomousModes {
 
 	NOTHING,
+	SELF_TEST,
 	LEFT_DRIVE_FORWARD,
 	LEFT_DRIVE_AND_DROP,
 	LEFT_DRIVE_FORWARD_DELAYED,

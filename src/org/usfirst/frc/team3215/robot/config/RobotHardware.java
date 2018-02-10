@@ -1,7 +1,11 @@
-package org.usfirst.frc.team3215.robot;
+package org.usfirst.frc.team3215.robot.config;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.usfirst.frc.team3215.robot.libraries.BNO055;
 import org.usfirst.frc.team3215.robot.libraries.ImuThread;
+import org.usfirst.frc.team3215.robot.libraries.LogHelper;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -20,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotHardware {
 
 	private boolean robotHardwareIsInitialized = false;
-	
+
 	// Constants
 	private final static int CAMERA_RESOLUTION_X = 640;
 	private final static int CAMERA_RESOLUTION_Y = 480;
@@ -43,27 +47,29 @@ public class RobotHardware {
 	private SpeedController motor8 = new Spark(8); // connected to PWM port 8 (Spark)
 	private SpeedController motor9 = new Spark(9); // connected to PWM port 9 (Spark)
 
+	private Set<SpeedController> allMotors = new HashSet<SpeedController>();
+
 	// camera, sensors
 	UsbCamera usbCamera;
 	private BNO055 imu;
-	private BNO055.CalData imuCalibration;
 	private ImuThread imuThread;
-	
+
 	// status variables
-	private AutonomousModes selectedAutonomous; // the selected value
 	private SendableChooser<AutonomousModes> autonomousChooser; // the chooser as shown on the dashboard
+
+	// other
+	private LogHelper logHelper = new LogHelper();
 
 	// one-time initialization
 	public void init() {
 		System.out.println("RobotHardware.init()");
-		
+
 		if (!robotHardwareIsInitialized) {
 			synchronized (this) {
 				if (!robotHardwareIsInitialized) {
 
 					// create the autonomous select values and put them on the dashboard
-					System.out.println("RobotHardware.init() - put autonomous choices to dashboard");
-					selectedAutonomous = AutonomousModes.NOTHING;
+					log("RobotHardware.init() - put autonomous choices to dashboard");
 					autonomousChooser = new SendableChooser<>();
 
 					for (AutonomousModes thisMode : AutonomousModes.values()) {
@@ -73,29 +79,37 @@ public class RobotHardware {
 							autonomousChooser.addObject(thisMode.toString(), thisMode);
 						}
 					}
-					
+
 					SmartDashboard.putData("Autonomous", autonomousChooser);
 
 					// initialize the camera
-					System.out.println("RobotHardware.init() - initialize USB camera");
+					log("RobotHardware.init() - initialize USB camera");
 					usbCamera = CameraServer.getInstance().startAutomaticCapture();
 					usbCamera.setResolution(CAMERA_RESOLUTION_X, CAMERA_RESOLUTION_Y);
 					usbCamera.setExposureManual(CAMERA_EXPOSURE_DEFAULT);
-					
+
 					// kick off IMU initialization (will complete later)
-					System.out.println("RobotHardware.init() - initialize IMU");
-					imu = BNO055.getInstance(
-							BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
-							BNO055.vector_type_t.VECTOR_EULER);
-					imuThread = new ImuThread(imu);
+					log("RobotHardware.init() - initialize IMU");
+					imu = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS, BNO055.vector_type_t.VECTOR_EULER);
+					imuThread = new ImuThread(logHelper, imu);
 					imuThread.setDaemon(true);
 					imuThread.start();
-					
-					// TODO initialize everything that needs initialization
 
 					robotHardwareIsInitialized = true;
-					
-					System.out.println("RobotHardware.init() - initialization complete");
+
+					// initialize helper sets
+					allMotors.add(motor0);
+					allMotors.add(motor1);
+					allMotors.add(motor2);
+					allMotors.add(motor3);
+					allMotors.add(motor4);
+					allMotors.add(motor5);
+					allMotors.add(motor6);
+					allMotors.add(motor7);
+					allMotors.add(motor8);
+					allMotors.add(motor9);
+
+					log("RobotHardware.init() - initialization complete");
 				}
 			}
 		}
@@ -103,14 +117,14 @@ public class RobotHardware {
 	}
 
 	// accessors
-	
+
 	/**
 	 * Get the selected autonomous mode (from the SmartDashboard)
 	 */
 	public AutonomousModes selectedAutonomous() {
 		return autonomousChooser.getSelected();
 	}
-	
+
 	/**
 	 * Returns whether the IMU has finished initialization
 	 */
@@ -128,7 +142,7 @@ public class RobotHardware {
 			return imu.getCalibration();
 		}
 	}
-	
+
 	/**
 	 * Access to IMU measurements are through the periodic IMU thread.
 	 */
@@ -190,6 +204,28 @@ public class RobotHardware {
 
 	public UsbCamera usbCamera() {
 		return usbCamera;
+	}
+
+	public void log(String message) {
+		logHelper.print(message);
+	}
+
+	public void logOnce(String message) {
+		logHelper.printOnce(message);
+	}
+
+	public void logResetTimer() {
+		logHelper.resetTimer();
+	}
+
+	public void logResetLogOnceMessages() {
+		logHelper.resetLogOnceMessages();
+	}
+	
+	public void stopAllMotors() {
+		for (SpeedController thisMotor: allMotors) {
+			thisMotor.stopMotor();
+		}
 	}
 
 }

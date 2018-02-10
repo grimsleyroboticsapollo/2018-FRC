@@ -11,22 +11,30 @@ public class ImuThread extends Thread {
 
 	private final Object HEADING_MUTEX = new Object();
 
-	private BNO055 imu;
+	private final BNO055 imu;
+	private final LogHelper log;
+
 	private double heading = 0; // most recent heading
 	private double headingPrev1 = 0; // previous heading
 	private double headingPrev2 = 0; // second previous heading
 	private double headingMvgAvg50 = 0; // moving exponential average at 50% weight (changes faster)
 	private double headingMvgAvg90 = 0; // moving exponential average at 90% weight (changes slowly)
 	private double headingBestTwoOfThree = 0; // out of the three most recent measures, drop the outlier
+
+	private double customCalibrationOffset = 0; // set this to calibrate "0" as starting position
+
 	private boolean imuIsInitialized = false;
+	private boolean imuIsCalibrated = false;
 
 	/**
 	 * Pass in the IMU object here. Initialization is expected to have been
 	 * initiated outside.
 	 */
-	public ImuThread(BNO055 imu) {
-		System.out.println("ImuThread constructor");
+	public ImuThread(LogHelper log, BNO055 imu) {
+		this.log = log;
 		this.imu = imu;
+
+		log.print("ImuThread constructor");
 	}
 
 	@Override
@@ -36,20 +44,30 @@ public class ImuThread extends Thread {
 
 			synchronized (HEADING_MUTEX) {
 
+				if (!imu.isSensorPresent()) {
+					log.print("PANIC - IMU not present? check wiring");
+				}
+
 				if (!imuIsInitialized && imu.isInitialized()) {
 					// IMU has finished initialization
 					imuIsInitialized = true;
-					System.out.println("IMU has finished initialization");
+					log.print("IMU has finished initialization");
+				}
+
+				if (!imuIsCalibrated && imu.isCalibrated()) {
+					// IMU has finished calibration and is ready for accurate readings
+					imuIsCalibrated = true;
 					BNO055.CalData imuCalibration = imu.getCalibration();
-					System.out.println("- IMU Temp: " + imu.getTemp());
-					System.out.println("- IMU " + imuCalibration);
+					log.print("IMU is calibrated and ready for accurate readings");
+					log.print("- IMU Temp: " + imu.getTemp());
+					log.print("- IMU " + imuCalibration);
 				}
 
 				if (imuIsInitialized) {
 
 					headingPrev2 = headingPrev1;
 					headingPrev1 = heading;
-					heading = imu.getHeading();
+					heading = imu.getHeading() - customCalibrationOffset;
 
 					// calculate the fast-moving exponential average
 					headingMvgAvg50 = headingMvgAvg50 * 0.5 + heading * 0.5;
@@ -82,22 +100,43 @@ public class ImuThread extends Thread {
 					}
 
 				} // ... if initialized
-				
+
 			} // ... synchronized
 
 			SmartDashboard.putBoolean("IMU initialized", imuIsInitialized);
-			SmartDashboard.putNumber("heading", heading);
-			SmartDashboard.putNumber("headingMvgAvg90", headingMvgAvg90);
-			SmartDashboard.putNumber("headingBestTwoOfThree", headingBestTwoOfThree);
+			SmartDashboard.putNumber("heading", ((int) (100 * heading)) / 100.);
+			SmartDashboard.putNumber("headingMvgAvg90", ((int) (100 * headingMvgAvg90)) / 100.);
+			SmartDashboard.putNumber("headingBestTwoOfThree", ((int) (100 * headingBestTwoOfThree)) / 100.);
 
 			try {
-				Thread.sleep(80);
+				Thread.sleep(80); // must be larger than 20 [ms] due to sensor limitations
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 		}
 
+	}
+
+	/**
+	 * Call this method after you know that the IMU has been still for at least one
+	 * second. It will use the slow moving exponential average to fine tune its 0
+	 * degree position.
+	 */
+	public void calibrateZeroHeading() {
+		synchronized (HEADING_MUTEX) {
+			customCalibrationOffset = headingMvgAvg90;
+			heading = 0;
+			headingPrev1 = 0;
+			headingPrev2 = 0;
+			headingMvgAvg50 = 0;
+			headingMvgAvg90 = 0;
+			headingBestTwoOfThree = 0;
+		}
+	}
+
+	public void resetZeroHeadingCalibration() {
+		customCalibrationOffset = 0;
 	}
 
 	/**
@@ -138,7 +177,7 @@ public class ImuThread extends Thread {
 			return headingBestTwoOfThree;
 		}
 	}
-	
+
 	/**
 	 * True if internal initialization of the IMU has completed.
 	 */
@@ -147,6 +186,5 @@ public class ImuThread extends Thread {
 			return imuIsInitialized;
 		}
 	}
-	
 
 }
