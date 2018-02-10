@@ -36,7 +36,14 @@ public class ImuThread extends Thread {
 
 			synchronized (HEADING_MUTEX) {
 
-				imuIsInitialized = imu.isInitialized();
+				if (!imuIsInitialized && imu.isInitialized()) {
+					// IMU has finished initialization
+					imuIsInitialized = true;
+					System.out.println("IMU has finished initialization");
+					BNO055.CalData imuCalibration = imu.getCalibration();
+					System.out.println("- IMU Temp: " + imu.getTemp());
+					System.out.println("- IMU " + imuCalibration);
+				}
 
 				if (imuIsInitialized) {
 

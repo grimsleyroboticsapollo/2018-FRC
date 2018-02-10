@@ -311,6 +311,10 @@ public class BNO055 {
 		public byte gyro;
 		public byte accel;
 		public byte mag;
+		@Override
+		public String toString() {
+			return "CalData [sys=" + sys + ", gyro=" + gyro + ", accel=" + accel + ", mag=" + mag + "]";
+		}
 	}
 
 	public enum vector_type_t {
