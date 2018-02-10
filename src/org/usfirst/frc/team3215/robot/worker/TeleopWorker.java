@@ -18,7 +18,6 @@ public class TeleopWorker {
 	 * Teleop init
 	 */
 	public void init() {
-
 		r.log("init() - teleop");
 
 	}

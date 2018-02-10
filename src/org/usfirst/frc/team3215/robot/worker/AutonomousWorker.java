@@ -18,7 +18,6 @@ public class AutonomousWorker {
 	 * Autonomous init
 	 */
 	public void init() {
-
 		r.log("init() - selected autonomous: " + r.selectedAutonomous().toString());
 
 		// TODO in the init(), set up the plan for each of the possible autonomous modes

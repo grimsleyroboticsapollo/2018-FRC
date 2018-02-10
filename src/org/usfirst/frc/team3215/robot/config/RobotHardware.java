@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor; // VEX Motor Controller
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 /**
  * This class holds all hardware information for the robot, to be used in all
@@ -49,6 +50,8 @@ public class RobotHardware {
 
 	private Set<SpeedController> allMotors = new HashSet<SpeedController>();
 
+	private MecanumDrive mecanumDrive;
+	
 	// camera, sensors
 	UsbCamera usbCamera;
 	private BNO055 imu;
@@ -108,6 +111,10 @@ public class RobotHardware {
 					allMotors.add(motor7);
 					allMotors.add(motor8);
 					allMotors.add(motor9);
+					
+					// initialize Mecanum library
+					// argument order: frontLeft, rearLeft, frontRight, rearRight
+					mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
 
 					log("RobotHardware.init() - initialization complete");
 				}
@@ -226,6 +233,10 @@ public class RobotHardware {
 		for (SpeedController thisMotor: allMotors) {
 			thisMotor.stopMotor();
 		}
+	}
+	
+	public MecanumDrive mecanum() {
+		return mecanumDrive;
 	}
 
 }
