@@ -1,0 +1,195 @@
+package org.usfirst.frc.team3215.robot;
+
+import org.usfirst.frc.team3215.robot.libraries.BNO055;
+import org.usfirst.frc.team3215.robot.libraries.ImuThread;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Spark; // Spark Motor Controller
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Victor; // VEX Motor Controller
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+/**
+ * This class holds all hardware information for the robot, to be used in all
+ * stages of the robot code (init, autonomous init, autonomous periodic, and
+ * teleop periodic).
+ */
+public class RobotHardware {
+
+	private boolean robotHardwareIsInitialized = false;
+	
+	// Constants
+	private final static int CAMERA_RESOLUTION_X = 640;
+	private final static int CAMERA_RESOLUTION_Y = 480;
+	private final static int CAMERA_EXPOSURE_DEFAULT = 75;
+
+	// Joysticks
+	private Joystick joystick0 = new Joystick(0);
+	private Joystick joystick1 = new Joystick(1);
+	private Joystick Joystick2 = new Joystick(2);
+
+	// Motors
+	private SpeedController motor0 = new Victor(0); // connected to PWM port 0
+	private SpeedController motor1 = new Victor(1); // connected to PWM port 1
+	private SpeedController motor2 = new Victor(2); // connected to PWM port 2
+	private SpeedController motor3 = new Victor(3); // connected to PWM port 3
+	private SpeedController motor4 = new Victor(4); // connected to PWM port 4
+	private SpeedController motor5 = new Victor(5); // connected to PWM port 5
+	private SpeedController motor6 = new Victor(6); // connected to PWM port 6
+	private SpeedController motor7 = new Victor(7); // connected to PWM port 7
+	private SpeedController motor8 = new Spark(8); // connected to PWM port 8 (Spark)
+	private SpeedController motor9 = new Spark(9); // connected to PWM port 9 (Spark)
+
+	// camera, sensors
+	UsbCamera usbCamera;
+	private BNO055 imu;
+	private BNO055.CalData imuCalibration;
+	private ImuThread imuThread;
+	
+	// status variables
+	private AutonomousModes selectedAutonomous; // the selected value
+	private SendableChooser<AutonomousModes> autonomousChooser; // the chooser as shown on the dashboard
+
+	// one-time initialization
+	public void init() {
+		System.out.println("RobotHardware.init()");
+		
+		if (!robotHardwareIsInitialized) {
+			synchronized (this) {
+				if (!robotHardwareIsInitialized) {
+
+					// create the autonomous select values and put them on the dashboard
+					System.out.println("RobotHardware.init() - put autonomous choices to dashboard");
+					selectedAutonomous = AutonomousModes.NOTHING;
+					autonomousChooser = new SendableChooser<>();
+
+					for (AutonomousModes thisMode : AutonomousModes.values()) {
+						if (thisMode == AutonomousModes.NOTHING) {
+							autonomousChooser.addDefault(thisMode.toString(), thisMode);
+						} else {
+							autonomousChooser.addObject(thisMode.toString(), thisMode);
+						}
+					}
+					
+					SmartDashboard.putData("Autonomous", autonomousChooser);
+
+					// initialize the camera
+					System.out.println("RobotHardware.init() - initialize USB camera");
+					usbCamera = CameraServer.getInstance().startAutomaticCapture();
+					usbCamera.setResolution(CAMERA_RESOLUTION_X, CAMERA_RESOLUTION_Y);
+					usbCamera.setExposureManual(CAMERA_EXPOSURE_DEFAULT);
+					
+					// kick off IMU initialization (will complete later)
+					System.out.println("RobotHardware.init() - initialize IMU");
+					imu = BNO055.getInstance(
+							BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
+							BNO055.vector_type_t.VECTOR_EULER);
+					imuThread = new ImuThread(imu);
+					imuThread.setDaemon(true);
+					imuThread.start();
+					
+					// TODO initialize everything that needs initialization
+
+					robotHardwareIsInitialized = true;
+					
+					System.out.println("RobotHardware.init() - initialization complete");
+				}
+			}
+		}
+
+	}
+
+	// accessors
+	
+	/**
+	 * Get the selected autonomous mode (from the SmartDashboard)
+	 */
+	public AutonomousModes selectedAutonomous() {
+		return autonomousChooser.getSelected();
+	}
+	
+	/**
+	 * Returns whether the IMU has finished initialization
+	 */
+	public boolean isImuInitialized() {
+		return imuThread.getImuIsInitialized();
+	}
+
+	/**
+	 * Once initialized, returns IMU calibration data.
+	 */
+	public BNO055.CalData imuCalibration() {
+		if (!isImuInitialized()) {
+			return null;
+		} else {
+			return imu.getCalibration();
+		}
+	}
+	
+	/**
+	 * Access to IMU measurements are through the periodic IMU thread.
+	 */
+	public ImuThread imu() {
+		return imuThread;
+	}
+
+	public Joystick joystick0() {
+		return joystick0;
+	}
+
+	public Joystick joystick1() {
+		return joystick1;
+	}
+
+	public Joystick joystick2() {
+		return Joystick2;
+	}
+
+	public SpeedController motor0() {
+		return motor0;
+	}
+
+	public SpeedController motor1() {
+		return motor1;
+	}
+
+	public SpeedController motor2() {
+		return motor2;
+	}
+
+	public SpeedController motor3() {
+		return motor3;
+	}
+
+	public SpeedController motor4() {
+		return motor4;
+	}
+
+	public SpeedController motor5() {
+		return motor5;
+	}
+
+	public SpeedController motor6() {
+		return motor6;
+	}
+
+	public SpeedController motor7() {
+		return motor7;
+	}
+
+	public SpeedController motor8() {
+		return motor8;
+	}
+
+	public SpeedController motor9() {
+		return motor9;
+	}
+
+	public UsbCamera usbCamera() {
+		return usbCamera;
+	}
+
+}
