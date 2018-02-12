@@ -109,7 +109,7 @@ public class ImuThread extends Thread {
 			SmartDashboard.putNumber("headingBestTwoOfThree", ((int) (100 * headingBestTwoOfThree)) / 100.);
 
 			try {
-				Thread.sleep(80); // must be larger than 20 [ms] due to sensor limitations
+				Thread.sleep(40); // must be larger than 20 [ms] due to sensor limitations
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

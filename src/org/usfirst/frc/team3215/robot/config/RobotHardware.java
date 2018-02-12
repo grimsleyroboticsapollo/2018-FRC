@@ -114,7 +114,7 @@ public class RobotHardware {
 					
 					// initialize Mecanum library
 					// argument order: frontLeft, rearLeft, frontRight, rearRight
-					mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
+					// TODO mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
 
 					log("RobotHardware.init() - initialization complete");
 				}
@@ -167,46 +167,6 @@ public class RobotHardware {
 
 	public Joystick joystick2() {
 		return Joystick2;
-	}
-
-	public SpeedController motor0() {
-		return motor0;
-	}
-
-	public SpeedController motor1() {
-		return motor1;
-	}
-
-	public SpeedController motor2() {
-		return motor2;
-	}
-
-	public SpeedController motor3() {
-		return motor3;
-	}
-
-	public SpeedController motor4() {
-		return motor4;
-	}
-
-	public SpeedController motor5() {
-		return motor5;
-	}
-
-	public SpeedController motor6() {
-		return motor6;
-	}
-
-	public SpeedController motor7() {
-		return motor7;
-	}
-
-	public SpeedController motor8() {
-		return motor8;
-	}
-
-	public SpeedController motor9() {
-		return motor9;
 	}
 
 	public UsbCamera usbCamera() {

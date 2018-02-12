@@ -39,7 +39,6 @@ public class Robot extends IterativeRobot {
 	public void robotPeriodic() {
 		r.logOnce(LOG_INIT + "robotPeriodic() started the first time.");
 
-		r.logOnce(LOG_INIT_FINISHED + "robotPeriodic() finished the first time.");
 	}
 
 	@Override
@@ -58,7 +57,6 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		r.logOnce(LOG_INIT + "disabledPeriodic() started the first time.");
 
-		r.logOnce(LOG_INIT_FINISHED + "disabledPeriodic() finished the first time.");
 	}
 
 	// =================================
@@ -85,7 +83,6 @@ public class Robot extends IterativeRobot {
 
 		autonomous.periodic();
 
-		r.logOnce(LOG_INIT_FINISHED + "autonomousPeriodic() finished the first time.");
 	}
 
 	// =================================
@@ -112,7 +109,6 @@ public class Robot extends IterativeRobot {
 
 		teleop.periodic();
 
-		r.logOnce(LOG_INIT_FINISHED + "teleopPeriodic() finished the first time.");
 	}
 
 	// =================================
@@ -139,7 +135,6 @@ public class Robot extends IterativeRobot {
 
 		test.periodic();
 
-		r.logOnce(LOG_INIT_FINISHED + "testPeriodic() finished the first time.");
 	}
 
 }
