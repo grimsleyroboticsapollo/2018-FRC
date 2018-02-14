@@ -34,7 +34,6 @@ public class RobotHardware {
 	// Joysticks
 	private Joystick joystick0 = new Joystick(0);
 	private Joystick joystick1 = new Joystick(1);
-	private Joystick Joystick2 = new Joystick(2);
 
 	// Motors
 	private SpeedController motor0 = new Victor(0); // connected to PWM port 0
@@ -163,10 +162,6 @@ public class RobotHardware {
 
 	public Joystick joystick1() {
 		return joystick1;
-	}
-
-	public Joystick joystick2() {
-		return Joystick2;
 	}
 
 	public UsbCamera usbCamera() {
