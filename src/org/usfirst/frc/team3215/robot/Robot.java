@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 		r.init();
 		r.stopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
-		
+
 		r.log(LOG_INIT_FINISHED + "robotInit() finished.");
 	}
 
