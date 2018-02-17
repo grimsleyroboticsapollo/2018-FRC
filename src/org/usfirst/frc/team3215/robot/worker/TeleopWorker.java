@@ -1,11 +1,12 @@
 package org.usfirst.frc.team3215.robot.worker;
 
+import org.usfirst.frc.team3215.robot.JoystickHelper;
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
 
 public class TeleopWorker {
 
 	private final RobotHardware r;
-
+	private JoystickHelper joysticks;
 	/**
 	 * Constructor - called during global init
 	 */
@@ -19,6 +20,7 @@ public class TeleopWorker {
 	 */
 	public void init() {
 		r.log("init() - teleop");
+		joysticks = new JoystickHelper(r);
 
 	}
 
@@ -26,7 +28,7 @@ public class TeleopWorker {
 	 * Teleop periodic
 	 */
 	public void periodic() {
-
+		joysticks.read();
 		// TODO
 
 	}

@@ -1,9 +1,9 @@
 package org.usfirst.frc.team3215.robot;
 
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
+import org.usfirst.frc.team3215.robot.libraries.FramerateHelper;
 import org.usfirst.frc.team3215.robot.worker.AutonomousWorker;
 import org.usfirst.frc.team3215.robot.worker.TeleopWorker;
-import org.usfirst.frc.team3215.robot.worker.TestWorker;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -15,7 +15,7 @@ public class Robot extends IterativeRobot {
 	RobotHardware r = new RobotHardware();
 	AutonomousWorker autonomous = null;
 	TeleopWorker teleop = null;
-	TestWorker test = null;
+	FramerateHelper frames = new FramerateHelper(r);
 
 	// =================================
 	// GLOBAL
@@ -80,8 +80,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		r.logOnce(LOG_INIT + "autonomousPeriodic() started the first time.");
-
-		autonomous.periodic();
+		if (frames.run()) {
+			autonomous.periodic();
+		}
 
 	}
 
@@ -106,34 +107,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		r.logOnce(LOG_INIT + "teleopPeriodic() started the first time.");
-
-		teleop.periodic();
-
-	}
-
-	// =================================
-	// TEST
-	// =================================
-
-	@Override
-	public void testInit() {
-		r.logResetTimer();
-		r.log(LOG_INIT + "testInit()");
-
-		r.log("calibrating IMU zero degree heading to: " + String.valueOf(r.imu().getHeadingMvgAvg90()));
-		r.imu().calibrateZeroHeading();
-
-		test = new TestWorker(r);
-		test.init();
-
-		r.log(LOG_INIT_FINISHED + "testInit() finished.");
-	}
-
-	@Override
-	public void testPeriodic() {
-		r.logOnce(LOG_INIT + "testPeriodic() started the first time.");
-
-		test.periodic();
+		if (frames.run()) {
+			r.logOnce("First frame run");
+			
+			teleop.periodic();
+		}
 
 	}
 

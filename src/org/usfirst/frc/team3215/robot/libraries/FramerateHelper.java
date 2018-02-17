@@ -11,6 +11,7 @@ public class FramerateHelper {
 
 	private RobotHardware r;
 	private long lastStartTime = 0;
+	private final static long FRAME_TIME = 50;
 
 	public FramerateHelper(RobotHardware r) {
 		this.r = r;
@@ -18,15 +19,18 @@ public class FramerateHelper {
 
 	public boolean run() {
 		long currentTime = System.currentTimeMillis();
-		lastStartTime = currentTime;
 		long elapsedTime = currentTime - lastStartTime;
-		if (elapsedTime < 50) {
+		
+		
+		if (elapsedTime < FRAME_TIME) {
 			return false;
 		}
-		if (elapsedTime > 100) {
+		if (elapsedTime > (2 * FRAME_TIME)) {
+			lastStartTime = currentTime;
 			r.log("Warning: Elapsed time " + elapsedTime);
 			return true;
 		}
+		lastStartTime = currentTime;
 		return true;
 	}
 }

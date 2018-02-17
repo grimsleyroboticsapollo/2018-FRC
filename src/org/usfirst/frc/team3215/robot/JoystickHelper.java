@@ -3,6 +3,7 @@ package org.usfirst.frc.team3215.robot;
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class JoystickHelper {
 
@@ -12,12 +13,14 @@ public class JoystickHelper {
 		this.r = r;
 	}
 
-	private double targetDirection;
-	private double targetAngle;
+	private double targetDriveDirection;
+	private double targetOrientationAngle;
 	private double driveSpeed;
 	private double turnSpeed;
 	private final static double JOY_THRESHOLD = 0.1;
 	private final static double SLOW_FACTOR = 3.;
+	private final static double REGULAR_FACTOR = 2.;
+	private final static double FAST_FACTOR = 1.;
 
 	private final static double RAD_TO_DEGREES = 180. / Math.PI;
 
@@ -109,44 +112,47 @@ public class JoystickHelper {
 	public void read() {
 
 		double joy0x = r.joystick0().getX(Hand.kLeft);
-		double joy0y = r.joystick0().getY(Hand.kLeft);
+		double joy0y = -r.joystick0().getY(Hand.kLeft);
 		double joy0angle = getAngle(joy0x, joy0y);
 		double joy0speed = Math.sqrt(joy0x * joy0x + joy0y * joy0y);
 		double joy1x = r.joystick1().getX(Hand.kLeft);
-		double joy1y = r.joystick1().getY(Hand.kLeft);
+		double joy1y = -r.joystick1().getY(Hand.kLeft);
 		double joy1angle = getAngle(joy1x, joy1y);
 		double joy1speed = Math.sqrt(joy1x * joy1x + joy1y * joy1y);
+		boolean leftBumper = r.joystick0().getRawButton(5);
+		boolean rightBumper = r.joystick0().getRawButton(6);
+		double speedFactor;
+		if (leftBumper) {
+			speedFactor = SLOW_FACTOR;
+		} else if (rightBumper) {
 
-		// TODO #JK Read state of joystick 0 left bumper / right bumper.
-		// TODO #JK Calculate joystick 0 speed factor from state of both bumpers.
+			speedFactor = FAST_FACTOR;
+		} else {
+			speedFactor = REGULAR_FACTOR;
+		}
 
 		if (joy0speed > JOY_THRESHOLD) {
 
-			targetDirection = joy0angle;
-			driveSpeed = joy0speed;
-			// TODO #JK adjust based on joystick 0 speed factor
+			targetDriveDirection = joy0angle;
+			driveSpeed = joy0speed / speedFactor;
 		} else if (r.joystick0().getPOV() >= 0) {
 
 			double povAngle = 360. - r.joystick0().getPOV();
-			targetAngle = r.imu().getHeadingBestTwoOfThree() + povAngle;
-			driveSpeed = 1.;
-			// TODO #JK adjust based on joystick 0 speed factor
+			targetDriveDirection = r.imu().getHeadingBestTwoOfThree() + povAngle;
+			driveSpeed = 1. / speedFactor;
 		} else if (joy1speed > JOY_THRESHOLD) {
 
-			targetAngle = r.imu().getHeadingBestTwoOfThree() + joy1angle;
+			targetDriveDirection = r.imu().getHeadingBestTwoOfThree() + joy1angle;
 			driveSpeed = joy1speed / SLOW_FACTOR;
 		} else {
-
-			// TODO #JK Delete the next line. We simply will keep the most recent
-			// TODO #JK target angle and not change it. This way gyro jitter will
-			// TODO #JK cancel out over time.
-			targetAngle = r.imu().getHeadingBestTwoOfThree();
-
 			driveSpeed = 0;
 		}
 
 		// TODO #JK implement orientation calculation
 
+		// TODO #JK limit angle
+		SmartDashboard.putNumber("targetDriveDirection", targetDriveDirection);
+		SmartDashboard.putNumber("driveSpeed", driveSpeed);
 	}
 
 }

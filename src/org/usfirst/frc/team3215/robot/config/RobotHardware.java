@@ -9,6 +9,7 @@ import org.usfirst.frc.team3215.robot.libraries.LogHelper;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark; // Spark Motor Controller
 import edu.wpi.first.wpilibj.SpeedController;
@@ -36,19 +37,21 @@ public class RobotHardware {
 	private Joystick joystick1 = new Joystick(1);
 
 	// Motors
-	private SpeedController motor0 = new Victor(0); // connected to PWM port 0
-	private SpeedController motor1 = new Victor(1); // connected to PWM port 1
-	private SpeedController motor2 = new Victor(2); // connected to PWM port 2
-	private SpeedController motor3 = new Victor(3); // connected to PWM port 3
+	private SpeedController motor0 = new Spark(0); // Front-left Mecanum connected to PWM port 0
+	private SpeedController motor1 = new Spark(1); // Rear-left Mecanum connected to PWM port 1
+	private SpeedController motor2 = new Spark(2); // Front-right Mecanum connected to PWM port 2
+	private SpeedController motor3 = new Spark(3); // Read-right connected to PWM port 3
 	private SpeedController motor4 = new Victor(4); // connected to PWM port 4
 	private SpeedController motor5 = new Victor(5); // connected to PWM port 5
 	private SpeedController motor6 = new Victor(6); // connected to PWM port 6
 	private SpeedController motor7 = new Victor(7); // connected to PWM port 7
-	private SpeedController motor8 = new Spark(8); // connected to PWM port 8 (Spark)
-	private SpeedController motor9 = new Spark(9); // connected to PWM port 9 (Spark)
+	private SpeedController motor8 = new Victor(8); // connected to PWM port 8
+	private SpeedController motor9 = new Victor(9); // connected to PWM port 9
 
 	private Set<SpeedController> allMotors = new HashSet<SpeedController>();
 
+	DigitalOutput diagnosticLight = new DigitalOutput(0);
+	
 	private MecanumDrive mecanumDrive;
 	
 	// camera, sensors
@@ -194,4 +197,8 @@ public class RobotHardware {
 		return mecanumDrive;
 	}
 
+	public void setDiagnosticLight(boolean setOn) {
+		diagnosticLight.set(setOn);
+	}
+	
 }
