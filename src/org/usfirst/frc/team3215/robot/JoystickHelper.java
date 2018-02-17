@@ -1,13 +1,14 @@
 package org.usfirst.frc.team3215.robot;
 
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
+import org.usfirst.frc.team3215.robot.libraries.AnglesHelper;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class JoystickHelper {
 
-	private RobotHardware r;
+	private final RobotHardware r;
 
 	public JoystickHelper(RobotHardware r) {
 		this.r = r;
@@ -150,9 +151,28 @@ public class JoystickHelper {
 
 		// TODO #JK implement orientation calculation
 
-		// TODO #JK limit angle
-		SmartDashboard.putNumber("targetDriveDirection", targetDriveDirection);
-		SmartDashboard.putNumber("driveSpeed", driveSpeed);
+		// limit speeds
+		if (driveSpeed > 1.0)
+			driveSpeed = 1.;
+
+		if (driveSpeed < -1.0)
+			driveSpeed = -1.;
+
+		if (turnSpeed > 1.0)
+			turnSpeed = 1.;
+
+		if (turnSpeed < -1.0)
+			turnSpeed = -1.;
+
+		// limit angle
+		targetDriveDirection = AnglesHelper.getPlainAngle(targetDriveDirection);
+		targetOrientationAngle = AnglesHelper.getPlainAngle(targetOrientationAngle);
+
+		// put values on dashboard
+		SmartDashboard.putNumber("targetDriveDirection", (int) targetDriveDirection);
+		SmartDashboard.putNumber("driveSpeed", ((int) (100 * driveSpeed)) / 100.);
+		SmartDashboard.putNumber("targetOrientationAngle", (int) targetOrientationAngle);
+		SmartDashboard.putNumber("turnSpeed", ((int) (100 * turnSpeed)) / 100.);
 	}
 
 }

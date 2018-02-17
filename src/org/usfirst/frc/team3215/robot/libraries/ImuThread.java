@@ -111,7 +111,7 @@ public class ImuThread extends Thread {
 			try {
 				Thread.sleep(40); // must be larger than 20 [ms] due to sensor limitations
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// ignore
 			}
 
 		}

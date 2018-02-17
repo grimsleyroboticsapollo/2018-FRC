@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.usfirst.frc.team3215.robot.libraries.BNO055;
+import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
 import org.usfirst.frc.team3215.robot.libraries.ImuThread;
 import org.usfirst.frc.team3215.robot.libraries.LogHelper;
 
@@ -51,9 +52,9 @@ public class RobotHardware {
 	private Set<SpeedController> allMotors = new HashSet<SpeedController>();
 
 	DigitalOutput diagnosticLight = new DigitalOutput(0);
-	
+
 	private MecanumDrive mecanumDrive;
-	
+
 	// camera, sensors
 	UsbCamera usbCamera;
 	private BNO055 imu;
@@ -64,6 +65,7 @@ public class RobotHardware {
 
 	// other
 	private LogHelper logHelper = new LogHelper();
+	private DiagnosticLightHelper diagnosticHelper;
 
 	// one-time initialization
 	public void init() {
@@ -100,6 +102,11 @@ public class RobotHardware {
 					imuThread.setDaemon(true);
 					imuThread.start();
 
+					// kick off the diagnostic helper (light)
+					diagnosticHelper = new DiagnosticLightHelper(this);
+					diagnosticHelper.setDaemon(true);
+					diagnosticHelper.start();
+
 					robotHardwareIsInitialized = true;
 
 					// initialize helper sets
@@ -113,7 +120,7 @@ public class RobotHardware {
 					allMotors.add(motor7);
 					allMotors.add(motor8);
 					allMotors.add(motor9);
-					
+
 					// initialize Mecanum library
 					// argument order: frontLeft, rearLeft, frontRight, rearRight
 					// TODO mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
@@ -186,13 +193,13 @@ public class RobotHardware {
 	public void logResetLogOnceMessages() {
 		logHelper.resetLogOnceMessages();
 	}
-	
+
 	public void stopAllMotors() {
-		for (SpeedController thisMotor: allMotors) {
+		for (SpeedController thisMotor : allMotors) {
 			thisMotor.stopMotor();
 		}
 	}
-	
+
 	public MecanumDrive mecanum() {
 		return mecanumDrive;
 	}
@@ -200,5 +207,9 @@ public class RobotHardware {
 	public void setDiagnosticLight(boolean setOn) {
 		diagnosticLight.set(setOn);
 	}
-	
+
+	public void setDiagnosticLights(int shortFlashes, int longFlashes) {
+		diagnosticHelper.setFlashes(shortFlashes, longFlashes);
+	}
+
 }

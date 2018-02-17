@@ -9,7 +9,7 @@ import org.usfirst.frc.team3215.robot.config.RobotHardware;
  */
 public class FramerateHelper {
 
-	private RobotHardware r;
+	private final RobotHardware r;
 	private long lastStartTime = 0;
 	private final static long FRAME_TIME = 50;
 
@@ -20,7 +20,6 @@ public class FramerateHelper {
 	public boolean run() {
 		long currentTime = System.currentTimeMillis();
 		long elapsedTime = currentTime - lastStartTime;
-		
 		
 		if (elapsedTime < FRAME_TIME) {
 			return false;

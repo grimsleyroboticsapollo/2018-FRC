@@ -32,6 +32,8 @@ public class Robot extends IterativeRobot {
 		r.stopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
 
+		r.setDiagnosticLights(1, 0); // one short
+
 		r.log(LOG_INIT_FINISHED + "robotInit() finished.");
 	}
 
@@ -49,6 +51,8 @@ public class Robot extends IterativeRobot {
 		r.logResetLogOnceMessages();
 		r.stopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
+
+		r.setDiagnosticLights(2, 0); // two short
 
 		r.log(LOG_INIT_FINISHED + "disabledInit() finished.");
 	}
@@ -73,6 +77,8 @@ public class Robot extends IterativeRobot {
 
 		autonomous = new AutonomousWorker(r);
 		autonomous.init();
+
+		r.setDiagnosticLights(3, 0); // 3 short
 
 		r.log(LOG_INIT_FINISHED + "autonomousInit() finished.");
 	}
@@ -101,6 +107,8 @@ public class Robot extends IterativeRobot {
 		teleop = new TeleopWorker(r);
 		teleop.init();
 
+		r.setDiagnosticLights(4, 0); // 4 short
+
 		r.log(LOG_INIT_FINISHED + "teleopInit() finished.");
 	}
 
@@ -109,7 +117,7 @@ public class Robot extends IterativeRobot {
 		r.logOnce(LOG_INIT + "teleopPeriodic() started the first time.");
 		if (frames.run()) {
 			r.logOnce("First frame run");
-			
+
 			teleop.periodic();
 		}
 

@@ -28,6 +28,7 @@ public class TeleopWorker {
 	 * Teleop periodic
 	 */
 	public void periodic() {
+		
 		joysticks.read();
 		// TODO
 
