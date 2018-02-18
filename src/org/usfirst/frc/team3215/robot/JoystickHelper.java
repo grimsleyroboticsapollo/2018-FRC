@@ -112,6 +112,8 @@ public class JoystickHelper {
 	 */
 	public void read() {
 
+		// (1) determine target drive direction and drive speed
+		
 		double joy0x = r.joystick0().getX(Hand.kLeft);
 		double joy0y = -r.joystick0().getY(Hand.kLeft);
 		double joy0angle = getAngle(joy0x, joy0y);
@@ -123,6 +125,7 @@ public class JoystickHelper {
 		boolean leftBumper = r.joystick0().getRawButton(5);
 		boolean rightBumper = r.joystick0().getRawButton(6);
 		double speedFactor;
+		
 		if (leftBumper) {
 			speedFactor = SLOW_FACTOR;
 		} else if (rightBumper) {
@@ -149,9 +152,10 @@ public class JoystickHelper {
 			driveSpeed = 0;
 		}
 
+		// (2) determine target orientation angle and turn speed
 		// TODO #JK implement orientation calculation
 
-		// limit speeds
+		// (3) limit speeds to within the allowable interval [-1.0, 1.0]
 		if (driveSpeed > 1.0)
 			driveSpeed = 1.;
 
@@ -164,14 +168,14 @@ public class JoystickHelper {
 		if (turnSpeed < -1.0)
 			turnSpeed = -1.;
 
-		// limit angle
+		// (4) limit angle to within the angle convention [0, 360[
 		targetDriveDirection = AnglesHelper.getPlainAngle(targetDriveDirection);
 		targetOrientationAngle = AnglesHelper.getPlainAngle(targetOrientationAngle);
 
-		// put values on dashboard
-		SmartDashboard.putNumber("targetDriveDirection", (int) targetDriveDirection);
+		// (5) all done - put values on dashboard for troubleshooting
+		SmartDashboard.putNumber("targetDriveDirection", ((int) (100 * targetDriveDirection)) / 100.);
 		SmartDashboard.putNumber("driveSpeed", ((int) (100 * driveSpeed)) / 100.);
-		SmartDashboard.putNumber("targetOrientationAngle", (int) targetOrientationAngle);
+		SmartDashboard.putNumber("targetOrientationAngle", ((int) (100 * targetOrientationAngle)) / 100.);
 		SmartDashboard.putNumber("turnSpeed", ((int) (100 * turnSpeed)) / 100.);
 	}
 

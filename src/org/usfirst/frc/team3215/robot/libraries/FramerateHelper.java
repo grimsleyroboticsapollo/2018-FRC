@@ -20,13 +20,18 @@ public class FramerateHelper {
 	public boolean run() {
 		long currentTime = System.currentTimeMillis();
 		long elapsedTime = currentTime - lastStartTime;
-		
+
 		if (elapsedTime < FRAME_TIME) {
 			return false;
 		}
+		if (elapsedTime > (20 * FRAME_TIME)) {
+			lastStartTime = currentTime;
+			r.log("Info: (Re)starting after long pause (" + (elapsedTime / 1000L) + " seconds)");
+			return true;
+		}
 		if (elapsedTime > (2 * FRAME_TIME)) {
 			lastStartTime = currentTime;
-			r.log("Warning: Elapsed time " + elapsedTime);
+			r.log("Warning: Elapsed time " + elapsedTime + " milliseconds");
 			return true;
 		}
 		lastStartTime = currentTime;

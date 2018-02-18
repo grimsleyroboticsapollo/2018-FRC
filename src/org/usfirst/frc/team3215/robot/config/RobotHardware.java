@@ -1,8 +1,10 @@
 package org.usfirst.frc.team3215.robot.config;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.usfirst.frc.team3215.robot.MotorHelper;
 import org.usfirst.frc.team3215.robot.libraries.BNO055;
 import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
 import org.usfirst.frc.team3215.robot.libraries.ImuThread;
@@ -20,9 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 /**
- * This class holds all hardware information for the robot, to be used in all
- * stages of the robot code (init, autonomous init, autonomous periodic, and
- * teleop periodic).
+ * This class holds hardware information for the robot, to be used in all stages
+ * of the robot code (init, autonomous init, autonomous periodic, and teleop
+ * periodic).
+ * 
+ * For motors, see MotorHelper.java
  */
 public class RobotHardware {
 
@@ -33,41 +37,29 @@ public class RobotHardware {
 	private final static int CAMERA_RESOLUTION_Y = 480;
 	private final static int CAMERA_EXPOSURE_DEFAULT = 75;
 
+	// Motors (see MotorHelper.java for motor-specific functionality)
+	MotorHelper motors;
+
 	// Joysticks
 	private Joystick joystick0 = new Joystick(0);
 	private Joystick joystick1 = new Joystick(1);
 
-	// Motors
-	private SpeedController motor0 = new Spark(0); // Front-left Mecanum connected to PWM port 0
-	private SpeedController motor1 = new Spark(1); // Rear-left Mecanum connected to PWM port 1
-	private SpeedController motor2 = new Spark(2); // Front-right Mecanum connected to PWM port 2
-	private SpeedController motor3 = new Spark(3); // Read-right connected to PWM port 3
-	private SpeedController motor4 = new Victor(4); // connected to PWM port 4
-	private SpeedController motor5 = new Victor(5); // connected to PWM port 5
-	private SpeedController motor6 = new Victor(6); // connected to PWM port 6
-	private SpeedController motor7 = new Victor(7); // connected to PWM port 7
-	private SpeedController motor8 = new Victor(8); // connected to PWM port 8
-	private SpeedController motor9 = new Victor(9); // connected to PWM port 9
-
-	private Set<SpeedController> allMotors = new HashSet<SpeedController>();
-
+	// diagnostic light (on/off) on DIO port 0
 	DigitalOutput diagnosticLight = new DigitalOutput(0);
-
-	private MecanumDrive mecanumDrive;
 
 	// camera, sensors
 	UsbCamera usbCamera;
 	private BNO055 imu;
 	private ImuThread imuThread;
 
-	// status variables
-	private SendableChooser<AutonomousModes> autonomousChooser; // the chooser as shown on the dashboard
+	// the chooser as shown on the SmartDashboard
+	private SendableChooser<AutonomousModes> autonomousChooser;
 
 	// other
 	private LogHelper logHelper = new LogHelper();
 	private DiagnosticLightHelper diagnosticHelper;
 
-	// one-time initialization
+	// one-time initialization - must restart program in order to force another initialization
 	public void init() {
 		System.out.println("RobotHardware.init()");
 
@@ -103,27 +95,17 @@ public class RobotHardware {
 					imuThread.start();
 
 					// kick off the diagnostic helper (light)
+					log("RobotHardware.init() - initialize diagnostic light");
 					diagnosticHelper = new DiagnosticLightHelper(this);
 					diagnosticHelper.setDaemon(true);
 					diagnosticHelper.start();
 
+					// initialize motors
+					log("RobotHardware.init() - initialize motors");
+					motors = new MotorHelper(this);
+
+					// all done!
 					robotHardwareIsInitialized = true;
-
-					// initialize helper sets
-					allMotors.add(motor0);
-					allMotors.add(motor1);
-					allMotors.add(motor2);
-					allMotors.add(motor3);
-					allMotors.add(motor4);
-					allMotors.add(motor5);
-					allMotors.add(motor6);
-					allMotors.add(motor7);
-					allMotors.add(motor8);
-					allMotors.add(motor9);
-
-					// initialize Mecanum library
-					// argument order: frontLeft, rearLeft, frontRight, rearRight
-					// TODO mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
 
 					log("RobotHardware.init() - initialization complete");
 				}
@@ -195,13 +177,7 @@ public class RobotHardware {
 	}
 
 	public void stopAllMotors() {
-		for (SpeedController thisMotor : allMotors) {
-			thisMotor.stopMotor();
-		}
-	}
-
-	public MecanumDrive mecanum() {
-		return mecanumDrive;
+		motors.stopAllMotors();
 	}
 
 	public void setDiagnosticLight(boolean setOn) {

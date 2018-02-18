@@ -32,7 +32,9 @@ public class Robot extends IterativeRobot {
 		r.stopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
 
-		r.setDiagnosticLights(1, 0); // one short
+		// one short light, indicates that the program has started but is not (yet)
+		// communicating with a driver station
+		r.setDiagnosticLights(1, 0);
 
 		r.log(LOG_INIT_FINISHED + "robotInit() finished.");
 	}
@@ -52,7 +54,9 @@ public class Robot extends IterativeRobot {
 		r.stopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
 
-		r.setDiagnosticLights(2, 0); // two short
+		// two short lights, indicates that the program is started, communicating with a
+		// driver station, and idling OK
+		r.setDiagnosticLights(2, 0);
 
 		r.log(LOG_INIT_FINISHED + "disabledInit() finished.");
 	}
@@ -78,7 +82,7 @@ public class Robot extends IterativeRobot {
 		autonomous = new AutonomousWorker(r);
 		autonomous.init();
 
-		r.setDiagnosticLights(3, 0); // 3 short
+		r.setDiagnosticLights(3, 0); // 3 short lights; autonomous has initialized
 
 		r.log(LOG_INIT_FINISHED + "autonomousInit() finished.");
 	}
@@ -107,7 +111,7 @@ public class Robot extends IterativeRobot {
 		teleop = new TeleopWorker(r);
 		teleop.init();
 
-		r.setDiagnosticLights(4, 0); // 4 short
+		r.setDiagnosticLights(4, 0); // 4 short lights; teleop is initialized
 
 		r.log(LOG_INIT_FINISHED + "teleopInit() finished.");
 	}
@@ -115,6 +119,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		r.logOnce(LOG_INIT + "teleopPeriodic() started the first time.");
+
 		if (frames.run()) {
 			r.logOnce("First frame run");
 

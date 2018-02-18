@@ -10,6 +10,9 @@ public class LogHelper {
 
 	private final Object LOG_MUTEX = new Object();
 
+	private final static int MAX_STACK_SIZE = 60;
+	private final static long TIME_WAIT_PER_MESSAGE_MILLIS = 100;
+
 	private long startDateTime = -1;
 	private Set<String> logOnceMessages = new HashSet<String>();
 	Queue<String> fifoMessages = new LinkedList<String>();
@@ -28,7 +31,7 @@ public class LogHelper {
 				}
 
 				try {
-					Thread.sleep(100); // up to 10 messages per second max
+					Thread.sleep(TIME_WAIT_PER_MESSAGE_MILLIS); // this limits the number of messages per second
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -43,7 +46,14 @@ public class LogHelper {
 	 */
 	public void print(String message) {
 		synchronized (LOG_MUTEX) {
-			fifoMessages.add(getTimeDisplay() + " " + message);
+			if (fifoMessages.size() > MAX_STACK_SIZE) {
+				// drop message silently
+			} else if (fifoMessages.size() == MAX_STACK_SIZE) {
+				fifoMessages.add(getTimeDisplay() + " " + message + "\n PANIC - fifoMessages.size() is max size ("
+						+ MAX_STACK_SIZE + "); messages will be dropped");
+			} else {
+				fifoMessages.add(getTimeDisplay() + " " + message);
+			}
 		}
 	}
 
@@ -54,8 +64,9 @@ public class LogHelper {
 		synchronized (LOG_MUTEX) {
 			if (logOnceMessages.add(message)) {
 				print(message);
-				if (logOnceMessages.size() > 10000) {
-					print("PANIC - logOnceMessages > 10000; discarding old set");
+				if (logOnceMessages.size() > MAX_STACK_SIZE) {
+					print("PANIC - logOnceMessages is greater than max size (" + MAX_STACK_SIZE
+							+ "); discarding old set");
 					resetLogOnceMessages();
 				}
 			}
