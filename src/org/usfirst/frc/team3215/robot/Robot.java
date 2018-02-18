@@ -18,7 +18,7 @@ public class Robot extends IterativeRobot {
 	FramerateHelper frames = new FramerateHelper(r);
 
 	// =================================
-	// GLOBAL
+	// GLOBAL 
 	// =================================
 
 	@Override
