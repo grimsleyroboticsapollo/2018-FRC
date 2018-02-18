@@ -7,6 +7,7 @@ public class TeleopWorker {
 
 	private final RobotHardware r;
 	private JoystickHelper joysticks;
+
 	/**
 	 * Constructor - called during global init
 	 */
@@ -21,17 +22,21 @@ public class TeleopWorker {
 	public void init() {
 		r.log("init() - teleop");
 		joysticks = new JoystickHelper(r);
-
 	}
 
 	/**
 	 * Teleop periodic
 	 */
 	public void periodic() {
-		
-		joysticks.read();
-		// TODO
 
+		// read the joysticks and calculate drive variables
+		joysticks.read();
+
+		// drive the motors from those drive variables
+		joysticks.drive(r.motors());
+
+		// TODO read all the other joystick buttons and drive some motors
+		
 	}
 
 }

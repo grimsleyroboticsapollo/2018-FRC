@@ -4,6 +4,11 @@ import org.usfirst.frc.team3215.robot.config.RobotHardware;
 
 public class DiagnosticLightHelper extends Thread {
 
+	public final static int ROBOT_INIT_SHORT = 1;
+	public final static int ROBOT_DISABLED_SHORT = 2;
+	public final static int ROBOT_AUTONOMOUS_SHORT = 3;
+	public final static int ROBOT_TELEOP_SHORT = 4;
+	
 	private final static long TIME_SHORT = 120;
 	private final static long TIME_LONG = 320;
 	private final static long TIME_PAUSE = 500;

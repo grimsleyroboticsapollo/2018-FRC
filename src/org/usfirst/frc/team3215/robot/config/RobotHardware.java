@@ -1,9 +1,5 @@
 package org.usfirst.frc.team3215.robot.config;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.usfirst.frc.team3215.robot.MotorHelper;
 import org.usfirst.frc.team3215.robot.libraries.BNO055;
 import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
@@ -14,12 +10,8 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Spark; // Spark Motor Controller
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor; // VEX Motor Controller
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 /**
  * This class holds hardware information for the robot, to be used in all stages
@@ -38,8 +30,8 @@ public class RobotHardware {
 	private final static int CAMERA_EXPOSURE_DEFAULT = 75;
 
 	// Motors (see MotorHelper.java for motor-specific functionality)
-	MotorHelper motors;
-
+	private MotorHelper motors;
+		
 	// Joysticks
 	private Joystick joystick0 = new Joystick(0);
 	private Joystick joystick1 = new Joystick(1);
@@ -59,7 +51,8 @@ public class RobotHardware {
 	private LogHelper logHelper = new LogHelper();
 	private DiagnosticLightHelper diagnosticHelper;
 
-	// one-time initialization - must restart program in order to force another initialization
+	// one-time initialization - must restart program in order to force another
+	// initialization
 	public void init() {
 		System.out.println("RobotHardware.init()");
 
@@ -176,8 +169,8 @@ public class RobotHardware {
 		logHelper.resetLogOnceMessages();
 	}
 
-	public void stopAllMotors() {
-		motors.stopAllMotors();
+	public MotorHelper motors() {
+		return motors;
 	}
 
 	public void setDiagnosticLight(boolean setOn) {

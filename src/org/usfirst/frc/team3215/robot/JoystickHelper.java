@@ -184,4 +184,12 @@ public class JoystickHelper {
 		SmartDashboard.putNumber("turnSpeed", ((int) (100 * turnSpeed)) / 100.);
 	}
 
+	/**
+	 * Passing the drive variables computed earlier to the motor helper to actually
+	 * drive the motors.
+	 */
+	public void drive(MotorHelper motorHelper) {
+		motorHelper.drive(targetDriveDirection, driveSpeed, targetOrientationAngle, turnSpeed);
+	}
+
 }

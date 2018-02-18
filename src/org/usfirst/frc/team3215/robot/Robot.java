@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3215.robot;
 
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
+import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
 import org.usfirst.frc.team3215.robot.libraries.FramerateHelper;
 import org.usfirst.frc.team3215.robot.worker.AutonomousWorker;
 import org.usfirst.frc.team3215.robot.worker.TeleopWorker;
@@ -29,12 +30,12 @@ public class Robot extends IterativeRobot {
 
 		// master initialization of robot hardware and sensors
 		r.init();
-		r.stopAllMotors();
+		r.motors().hardStopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
 
 		// one short light, indicates that the program has started but is not (yet)
 		// communicating with a driver station
-		r.setDiagnosticLights(1, 0);
+		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_INIT_SHORT, 0);
 
 		r.log(LOG_INIT_FINISHED + "robotInit() finished.");
 	}
@@ -51,12 +52,12 @@ public class Robot extends IterativeRobot {
 
 		// execution (autonomous, test, or teleop) has been stopped
 		r.logResetLogOnceMessages();
-		r.stopAllMotors();
+		r.motors().hardStopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
 
 		// two short lights, indicates that the program is started, communicating with a
 		// driver station, and idling OK
-		r.setDiagnosticLights(2, 0);
+		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_DISABLED_SHORT, 0);
 
 		r.log(LOG_INIT_FINISHED + "disabledInit() finished.");
 	}
@@ -82,7 +83,7 @@ public class Robot extends IterativeRobot {
 		autonomous = new AutonomousWorker(r);
 		autonomous.init();
 
-		r.setDiagnosticLights(3, 0); // 3 short lights; autonomous has initialized
+		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_AUTONOMOUS_SHORT, 0); // 3 short lights; autonomous has initialized
 
 		r.log(LOG_INIT_FINISHED + "autonomousInit() finished.");
 	}
@@ -111,7 +112,7 @@ public class Robot extends IterativeRobot {
 		teleop = new TeleopWorker(r);
 		teleop.init();
 
-		r.setDiagnosticLights(4, 0); // 4 short lights; teleop is initialized
+		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_TELEOP_SHORT, 0); // 4 short lights; teleop is initialized
 
 		r.log(LOG_INIT_FINISHED + "teleopInit() finished.");
 	}
