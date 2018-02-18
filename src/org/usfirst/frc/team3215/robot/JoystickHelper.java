@@ -4,6 +4,7 @@ import org.usfirst.frc.team3215.robot.config.RobotHardware;
 import org.usfirst.frc.team3215.robot.libraries.AnglesHelper;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class JoystickHelper {
@@ -12,6 +13,11 @@ public class JoystickHelper {
 
 	public JoystickHelper(RobotHardware r) {
 		this.r = r;
+
+		r.joystick0().setRumble(RumbleType.kLeftRumble, 0);
+		r.joystick0().setRumble(RumbleType.kRightRumble, 0);
+		r.joystick1().setRumble(RumbleType.kLeftRumble, 0);
+		r.joystick1().setRumble(RumbleType.kRightRumble, 0);
 	}
 
 	private double targetDriveDirection;
@@ -113,7 +119,7 @@ public class JoystickHelper {
 	public void read() {
 
 		// (1) determine target drive direction and drive speed
-		
+
 		double joy0x = r.joystick0().getX(Hand.kLeft);
 		double joy0y = -r.joystick0().getY(Hand.kLeft);
 		double joy0angle = getAngle(joy0x, joy0y);
@@ -125,11 +131,10 @@ public class JoystickHelper {
 		boolean leftBumper = r.joystick0().getRawButton(5);
 		boolean rightBumper = r.joystick0().getRawButton(6);
 		double speedFactor;
-		
+
 		if (leftBumper) {
 			speedFactor = SLOW_FACTOR;
 		} else if (rightBumper) {
-
 			speedFactor = FAST_FACTOR;
 		} else {
 			speedFactor = REGULAR_FACTOR;
