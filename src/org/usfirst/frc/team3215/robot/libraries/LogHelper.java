@@ -49,7 +49,7 @@ public class LogHelper {
 			if (fifoMessages.size() > MAX_STACK_SIZE) {
 				// drop message silently
 			} else if (fifoMessages.size() == MAX_STACK_SIZE) {
-				fifoMessages.add(getTimeDisplay() + " " + message + "\n PANIC - fifoMessages.size() is max size ("
+				fifoMessages.add(getTimeDisplay() + " " + message + "\n Warning: PANIC - fifoMessages.size() is max size ("
 						+ MAX_STACK_SIZE + "); messages will be dropped");
 			} else {
 				fifoMessages.add(getTimeDisplay() + " " + message);
@@ -65,7 +65,7 @@ public class LogHelper {
 			if (logOnceMessages.add(message)) {
 				print(message);
 				if (logOnceMessages.size() > MAX_STACK_SIZE) {
-					print("PANIC - logOnceMessages is greater than max size (" + MAX_STACK_SIZE
+					print("Warning: PANIC - logOnceMessages is greater than max size (" + MAX_STACK_SIZE
 							+ "); discarding old set");
 					resetLogOnceMessages();
 				}

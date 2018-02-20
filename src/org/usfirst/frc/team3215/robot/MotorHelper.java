@@ -76,7 +76,8 @@ public class MotorHelper {
 	}
 
 	/**
-	 * Halts all linear motors gracefully (i.e. without jerking). Needs to be called periodicatlly to execute slowdown properly until actual halt.
+	 * Halts all linear motors gracefully (i.e. without jerking). Needs to be called
+	 * periodicatlly to execute slowdown properly until actual halt.
 	 */
 	public void haltLinearMotorsPeriodic() {
 		linear(LIFT, 0);
@@ -85,18 +86,18 @@ public class MotorHelper {
 		linear(CUBIE_DEPLOY, 0);
 		linear(CUBIE_INTAKE, 0);
 	}
-	
+
 	/**
 	 * Have the robot drive into a given direction, at a given speed, and have it
 	 * orient towards a given angle, at a given rate of turne.
 	 * 
 	 * @param targetDriveDirection
-	 *            The direction into which to drive. Forward is 0, left is 90, back
-	 *            is 180, and right is 270 degrees.
+	 *            The direction into which to drive (in field orientation). Forward
+	 *            is 0, left is 90, back is 180, and right is 270 degrees.
 	 * @param driveSpeed
 	 *            The speed at which to drive. 0 is stopped, 1 is full speed.
 	 * @param targetOrientationAngle
-	 *            The orientation into which to turn.
+	 *            The field orientation angle into which to turn.
 	 * @param turnSpeed
 	 *            The rate of turn at which to aim for the target orientation. 0 is
 	 *            no turn, 1 is fastest turn.

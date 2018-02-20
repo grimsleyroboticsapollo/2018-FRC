@@ -45,7 +45,7 @@ public class ImuThread extends Thread {
 			synchronized (HEADING_MUTEX) {
 
 				if (!imu.isSensorPresent()) {
-					log.print("PANIC - IMU not present? check wiring");
+					log.print("Warning: PANIC - IMU not present? check wiring");
 				}
 
 				if (!imuIsInitialized && imu.isInitialized()) {
