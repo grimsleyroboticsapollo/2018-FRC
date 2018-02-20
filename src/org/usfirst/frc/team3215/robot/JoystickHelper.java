@@ -28,8 +28,18 @@ public class JoystickHelper {
 	private final static double SLOW_FACTOR = 3.;
 	private final static double REGULAR_FACTOR = 2.;
 	private final static double FAST_FACTOR = 1.;
+	private final static double TRIGGER_SCALING_FACTOR = 5;
+	private boolean turnAsYouGo = true;
 
 	private final static double RAD_TO_DEGREES = 180. / Math.PI;
+	
+	// raw axis numbers
+	private final static int AXIS_LEFT_X = 0;
+	private final static int AXIS_LEFT_Y = 1;
+	private final static int AXIS_TRIGGER_LEFT = 2;
+	private final static int AXIS_TRIGGER_RIGHT = 3;
+	private final static int AXIS_RIGHT_X = 4;
+	private final static int AXIS_RIGHT_Y = 5;
 
 	/**
 	 * Given a joystick position, calculates the angle where it is pointing at.
@@ -120,21 +130,41 @@ public class JoystickHelper {
 
 		// (1) determine target drive direction and drive speed
 
-		double joy0x = r.joystick0().getX(Hand.kLeft);
-		double joy0y = -r.joystick0().getY(Hand.kLeft);
+		double joy0x = r.joystick0().getRawAxis(AXIS_LEFT_X);
+		double joy0y = -r.joystick0().getRawAxis(AXIS_LEFT_Y);
 		double joy0angle = getAngle(joy0x, joy0y);
 		double joy0speed = Math.sqrt(joy0x * joy0x + joy0y * joy0y);
-		double joy1x = r.joystick1().getX(Hand.kLeft);
-		double joy1y = -r.joystick1().getY(Hand.kLeft);
+		
+		double joy0rightX = r.joystick0().getRawAxis(AXIS_RIGHT_X);
+		double joy0rightY = -r.joystick0().getRawAxis(AXIS_RIGHT_Y);
+		double joy0rightAngle = getAngle(joy0rightX, joy0rightY);
+		double joy0rightSpeed = Math.sqrt(joy0rightX * joy0rightX + joy0rightY * joy0rightY);
+		
+		double joy1x = r.joystick1().getRawAxis(AXIS_LEFT_X);
+		double joy1y = -r.joystick1().getRawAxis(AXIS_LEFT_Y);
 		double joy1angle = getAngle(joy1x, joy1y);
 		double joy1speed = Math.sqrt(joy1x * joy1x + joy1y * joy1y);
-		boolean leftBumper = r.joystick0().getRawButton(5);
-		boolean rightBumper = r.joystick0().getRawButton(6);
+		
+		double joy1rightX = r.joystick1().getRawAxis(AXIS_RIGHT_X);
+		double joy1rightY = -r.joystick1().getRawAxis(AXIS_RIGHT_Y);
+		double joy1rightAngle = getAngle(joy1rightX, joy1rightY);
+		double joy1rightSpeed = Math.sqrt(joy1rightX * joy1rightX + joy1rightY * joy1rightY);
+		
+		boolean joy0leftBumper = r.joystick0().getRawButton(5);
+		boolean joy0rightBumper = r.joystick0().getRawButton(6);
+		double joy0leftTrigger = r.joystick0().getRawAxis(AXIS_TRIGGER_LEFT);
+		double joy0rightTrigger = r.joystick0().getRawAxis(AXIS_TRIGGER_RIGHT);
+		double effectiveTrigger = joy0leftTrigger - joy0rightTrigger;
+		boolean joy0buttonA = r.joystick0().getRawButton(1);
+		boolean joy0buttonB = r.joystick0().getRawButton(2);
+		boolean joy0buttonX = r.joystick0().getRawButton(3);
+		boolean joy0buttonY = r.joystick0().getRawButton(4);
+		
 		double speedFactor;
-
-		if (leftBumper) {
+		
+		if (joy0leftBumper) {
 			speedFactor = SLOW_FACTOR;
-		} else if (rightBumper) {
+		} else if (joy0rightBumper) {
 			speedFactor = FAST_FACTOR;
 		} else {
 			speedFactor = REGULAR_FACTOR;
@@ -158,8 +188,38 @@ public class JoystickHelper {
 		}
 
 		// (2) determine target orientation angle and turn speed
-		// TODO #JK implement orientation calculation
-
+	
+		if (joy0rightSpeed > JOY_THRESHOLD) {
+			
+			targetOrientationAngle = joy0rightAngle;
+			turnSpeed = joy0rightSpeed / speedFactor;
+		} else if ((joy0speed > JOY_THRESHOLD) && turnAsYouGo) {
+			
+			targetOrientationAngle = joy0angle;
+			turnSpeed = joy0speed / speedFactor;
+		} else if ((joy0leftTrigger > JOY_THRESHOLD) || (joy0rightTrigger > JOY_THRESHOLD)) {
+			
+			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() + effectiveTrigger * TRIGGER_SCALING_FACTOR;
+			turnSpeed = Math.abs(effectiveTrigger);
+		} else if (Math.abs(joy1rightX) > JOY_THRESHOLD) {
+			
+			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() + joy1rightX * TRIGGER_SCALING_FACTOR;
+			turnSpeed = Math.abs(joy1rightX);
+		} else {
+			
+			turnSpeed = 0;
+		}
+		
+		// Turn as you go
+		
+		if (joy0buttonA || joy0buttonB) {
+			
+			turnAsYouGo = true;
+		} else if (joy0buttonX || joy0buttonY) {
+			
+			turnAsYouGo = false;
+		}
+		
 		// (3) limit speeds to within the allowable interval [-1.0, 1.0]
 		if (driveSpeed > 1.0)
 			driveSpeed = 1.;
@@ -182,6 +242,7 @@ public class JoystickHelper {
 		SmartDashboard.putNumber("driveSpeed", ((int) (100 * driveSpeed)) / 100.);
 		SmartDashboard.putNumber("targetOrientationAngle", ((int) (100 * targetOrientationAngle)) / 100.);
 		SmartDashboard.putNumber("turnSpeed", ((int) (100 * turnSpeed)) / 100.);
+		SmartDashboard.putBoolean("turnAsYouGo", turnAsYouGo);
 	}
 
 	/**
