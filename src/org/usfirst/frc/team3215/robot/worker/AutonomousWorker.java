@@ -67,6 +67,8 @@ public class AutonomousWorker {
 			currentActionStopTime = 0;
 			currentAction = null;
 
+			// TODO implement reading a field for initial delay
+
 			// depending on which autonomous is selected, make a corresponding plan
 			switch (r.selectedAutonomous()) {
 
@@ -79,14 +81,6 @@ public class AutonomousWorker {
 				// TODO
 				break;
 
-			case LEFT_DRIVE_FORWARD_DELAYED:
-				// TODO #JK tweak the following, it's just an example of the framework
-
-				// after a 10 second delay, drive forward for 4 seconds
-				plan.add(new Action(ACTION_HALT_AND_WAIT, 10000));
-				plan.add(new Action(1, 4000));
-				break;
-
 			// --- when robot is standing in the MIDDLE:
 			case MIDDLE_DRIVE_AND_DROP:
 				// TODO
@@ -96,15 +90,7 @@ public class AutonomousWorker {
 				// TODO
 				break;
 
-			case MIDDLE_DRIVE_TO_LEFT_DELAYED:
-				// TODO
-				break;
-
 			case MIDDLE_DRIVE_TO_RIGHT:
-				// TODO
-				break;
-
-			case MIDDLE_DRIVE_TO_RIGHT_DELAYED:
 				// TODO
 				break;
 
@@ -117,13 +103,21 @@ public class AutonomousWorker {
 				// TODO
 				break;
 
-			case RIGHT_DRIVE_FORWARD_DELAYED:
-				// TODO
-				break;
-
 			// --- special functions:
 			case SELF_TEST:
-				// TODO
+
+				// 2 second delay
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 2000));
+
+				// quick drive forward (200ms)
+				plan.add(new Action(1, 200));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 2000));
+
+				/*
+				 * TODO add more tests here (e.g. drive back, left, right, turn left, right;
+				 * other motors)
+				 */
+
 				break;
 
 			case NOTHING:
@@ -157,7 +151,7 @@ public class AutonomousWorker {
 				break;
 
 			case 1: // drive forward at 50% speed
-				r.motors().drive(0, 0.5, 0, 0);
+				r.motors().drive(0, 0.5, 0, 1);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
