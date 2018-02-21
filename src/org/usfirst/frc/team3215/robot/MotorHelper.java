@@ -3,6 +3,7 @@ package org.usfirst.frc.team3215.robot;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
+import org.usfirst.frc.team3215.robot.libraries.AnglesHelper;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -16,10 +17,10 @@ public class MotorHelper {
 
 	// Constants for PWM channel
 	public final static int LIFT = 4;
-	public final static int WINCH = 5;
-	public final static int RAMP = 6;
-	public final static int CUBIE_DEPLOY = 7;
-	public final static int CUBIE_INTAKE = 8;
+	public final static int CUBIE_DEPLOY = 5;
+	public final static int CUBIE_INTAKE = 6;
+	public final static int WINCH = 7;
+	public final static double THRESHOLD_ANGLE = 20;
 
 	private final RobotHardware r;
 
@@ -41,12 +42,10 @@ public class MotorHelper {
 		motors.add(5, new Victor(5));
 		motors.add(6, new Victor(6));
 		motors.add(7, new Victor(7));
-		motors.add(8, new Victor(8));
-		motors.add(9, new Victor(9));
 
 		// initialize Mecanum library
 		// argument order: frontLeft, rearLeft, frontRight, rearRight
-		// TODO mecanumDrive = new MecanumDrive(motor0, motor1, motor2, motor3);
+		mecanumDrive = new MecanumDrive(motors.get(0), motors.get(1), motors.get(2), motors.get(3));
 	}
 
 	/**
@@ -82,7 +81,6 @@ public class MotorHelper {
 	public void haltLinearMotorsPeriodic() {
 		linear(LIFT, 0);
 		linear(WINCH, 0);
-		linear(RAMP, 0);
 		linear(CUBIE_DEPLOY, 0);
 		linear(CUBIE_INTAKE, 0);
 	}
@@ -100,10 +98,22 @@ public class MotorHelper {
 	 *            The field orientation angle into which to turn.
 	 * @param turnSpeed
 	 *            The rate of turn at which to aim for the target orientation. 0 is
-	 *            no turn, 1 is fastest turn.
+	 *            no turn, 1 is fastest turn. Important: If you do care to have the
+	 *            robot turn into a certain orientation, this value must be greater
+	 *            than zero!
 	 */
 	public void drive(double targetDriveDirection, double driveSpeed, double targetOrientationAngle, double turnSpeed) {
-		// TODO implement
+		
+		double currentAngle = r.imu().getHeadingBestTwoOfThree();
+		double angleDifference = AnglesHelper.getAngleDifference(currentAngle, targetOrientationAngle);
+		double effectiveTurnSpeed = turnSpeed;
+		
+		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
+			
+			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
+		} 
+		
+		mecanumDrive.drivePolar(driveSpeed, targetDriveDirection - currentAngle, -effectiveTurnSpeed);
 	}
 
 	/**
