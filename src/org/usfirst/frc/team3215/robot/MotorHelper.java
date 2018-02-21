@@ -112,7 +112,7 @@ public class MotorHelper {
 			
 			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
 		} 
-		
+		//Maybe implement check to prevent motor brownout
 		mecanumDrive.drivePolar(driveSpeed, targetDriveDirection - currentAngle, -effectiveTurnSpeed);
 	}
 
