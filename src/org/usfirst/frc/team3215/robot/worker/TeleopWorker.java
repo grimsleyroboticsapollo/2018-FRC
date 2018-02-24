@@ -84,8 +84,20 @@ public class TeleopWorker {
 				r.motors().linear(MotorHelper.LIFT, 1.0);
 			} else if (joy1liftDownButton) {
 				r.motors().linear(MotorHelper.LIFT, -1.0);
-			} else
+			} else {
 				r.motors().linear(MotorHelper.LIFT, 0);
+			}
+
+			// TODO #JK joy 0 back+start button hold to reset IMU, release to recalibrate
+			//
+			// (1) make state of joy0 back+start button a private class variable
+			// (2) if state changes from "released" to "pushed", reset IMU:
+			//
+			// r.imu().resetZeroHeadingCalibration();
+			//
+			// (3) if state changes from "pushed" to released, recalibrate IMU:
+			//
+			// r.imu().calibrateZeroHeading();
 
 		} catch (Exception e) {
 			r.logOnce(ExceptionHelper.getString(e));

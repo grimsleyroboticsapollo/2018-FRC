@@ -56,8 +56,6 @@ public class Robot extends IterativeRobot {
 		// execution (autonomous, test, or teleop) has been stopped
 		r.logResetLogOnceMessages();
 		r.motors().hardStopAllMotors();
-		r.imu().resetZeroHeadingCalibration();
-		imuZeroHeadingCalibrationIsReset = true;
 
 		// two short lights, indicates that the program is started, communicating with a
 		// driver station, and idling OK
