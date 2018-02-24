@@ -58,7 +58,35 @@ public class TeleopWorker {
 				r.motors().linear(MotorHelper.WINCH, 0);
 			}
 
-			// TODO read all the other joystick buttons and drive some motors
+			boolean joy1leftBumper = r.joystick1().getRawButton(5);
+			if (joy1leftBumper) {
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, 1.0);
+			}
+			boolean joy1rightBumper = r.joystick1().getRawButton(6);
+			if (joy1rightBumper) {
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, -1.0);
+			}
+
+			boolean joy1startButton = r.joystick1().getRawButton(8);
+			if (joy1startButton) {
+				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 1.0);
+			}
+
+			boolean joy1backButton = r.joystick1().getRawButton(7);
+			if (joy1backButton) {
+				r.motors().linear(MotorHelper.CUBIE_DEPLOY, -1.0);
+			}
+
+			boolean joy1liftUpButton = (r.joystick1().getPOV() == 0);
+			if (joy1liftUpButton) {
+				r.motors().linear(MotorHelper.LIFT, 1.0);
+			}
+
+			boolean joy1liftDownButton = (r.joystick1().getPOV() == 180);
+			if (joy1liftDownButton) {
+				r.motors().linear(MotorHelper.LIFT, -1.0);
+			}
+
 
 		} catch (Exception e) {
 			r.logOnce(ExceptionHelper.getString(e));
