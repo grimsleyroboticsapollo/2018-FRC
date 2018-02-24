@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * All functions to drive the motors.
@@ -21,12 +22,12 @@ public class MotorHelper {
 	public final static int CUBIE_INTAKE = 6;
 	public final static int WINCH = 7;
 	public final static double THRESHOLD_ANGLE = 20;
-
+	public final static double SPEED_INCREMENT = 0.1;
 	private final RobotHardware r;
 
 	// 10 motor controllers
 	private ArrayList<SpeedController> motors = new ArrayList<SpeedController>(10);
-
+	private double previousSpeed[] = new double[10];
 	// reference to FRC mecanum wheel library
 	private MecanumDrive mecanumDrive;
 
@@ -103,16 +104,16 @@ public class MotorHelper {
 	 *            than zero!
 	 */
 	public void drive(double targetDriveDirection, double driveSpeed, double targetOrientationAngle, double turnSpeed) {
-		
+
 		double currentAngle = r.imu().getHeadingBestTwoOfThree();
 		double angleDifference = AnglesHelper.getAngleDifference(currentAngle, targetOrientationAngle);
 		double effectiveTurnSpeed = turnSpeed;
-		
+
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
-			
+
 			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
-		} 
-		//Maybe implement check to prevent motor brownout
+		}
+		// Maybe implement check to prevent motor brownout
 		mecanumDrive.drivePolar(driveSpeed, targetDriveDirection - currentAngle, -effectiveTurnSpeed);
 	}
 
@@ -127,7 +128,25 @@ public class MotorHelper {
 	 *            1.
 	 */
 	public void linear(int motorNumber, double speed) {
-		// TODO implement
+		double speedDifference = speed - previousSpeed[motorNumber];
+		if (speedDifference > SPEED_INCREMENT) {
+			speedDifference = SPEED_INCREMENT;
+		}
+		if (speedDifference < -SPEED_INCREMENT) {
+			speedDifference = -SPEED_INCREMENT;
+		}
+		double effectiveSpeed = speedDifference + previousSpeed[motorNumber];
+		if (effectiveSpeed > 1.0) {
+			effectiveSpeed = 1.0;
+		}
+		if (effectiveSpeed < -1.0) {
+			effectiveSpeed = -1.0;
+		}
+		previousSpeed[motorNumber] = effectiveSpeed;
+
+		motors.get(motorNumber).set(effectiveSpeed);
+		SmartDashboard.putNumber("effectiveSpeed", effectiveSpeed);
+
 	}
 
 }

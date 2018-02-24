@@ -13,13 +13,15 @@ public class Robot extends IterativeRobot {
 	private final static String LOG_INIT = "==================== ";
 	private final static String LOG_INIT_FINISHED = ".   .   .   .   .   .";
 
-	RobotHardware r = new RobotHardware();
-	AutonomousWorker autonomous = null;
-	TeleopWorker teleop = null;
-	FramerateHelper frames = new FramerateHelper(r);
+	private RobotHardware r = new RobotHardware();
+	private AutonomousWorker autonomous = null;
+	private TeleopWorker teleop = null;
+	private FramerateHelper frames = new FramerateHelper(r);
+
+	private boolean imuZeroHeadingCalibrationIsReset = false;
 
 	// =================================
-	// GLOBAL 
+	// GLOBAL
 	// =================================
 
 	@Override
@@ -32,6 +34,7 @@ public class Robot extends IterativeRobot {
 		r.init();
 		r.motors().hardStopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
+		imuZeroHeadingCalibrationIsReset = true;
 
 		// one short light, indicates that the program has started but is not (yet)
 		// communicating with a driver station
@@ -54,6 +57,7 @@ public class Robot extends IterativeRobot {
 		r.logResetLogOnceMessages();
 		r.motors().hardStopAllMotors();
 		r.imu().resetZeroHeadingCalibration();
+		imuZeroHeadingCalibrationIsReset = true;
 
 		// two short lights, indicates that the program is started, communicating with a
 		// driver station, and idling OK
@@ -77,13 +81,19 @@ public class Robot extends IterativeRobot {
 		r.logResetTimer();
 		r.log(LOG_INIT + "autonomousInit()");
 
-		r.log("calibrating IMU zero degree heading to: " + String.valueOf(r.imu().getHeadingMvgAvg90()));
-		r.imu().calibrateZeroHeading();
+		if (imuZeroHeadingCalibrationIsReset) {
+			r.log("calibrating IMU zero degree heading to: " + String.valueOf(r.imu().getHeadingMvgAvg90()));
+			r.imu().calibrateZeroHeading();
+			imuZeroHeadingCalibrationIsReset = false;
+		} else {
+			r.log("IMU already calibrated, continue using existing calibration");
+		}
 
 		autonomous = new AutonomousWorker(r);
 		autonomous.init();
 
-		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_AUTONOMOUS_SHORT, 0); // 3 short lights; autonomous has initialized
+		r.setDiagnosticLights(DiagnosticLightHelper.ROBOT_AUTONOMOUS_SHORT, 0); // 3 short lights; autonomous has
+																				// initialized
 
 		r.log(LOG_INIT_FINISHED + "autonomousInit() finished.");
 	}
@@ -106,8 +116,13 @@ public class Robot extends IterativeRobot {
 		r.logResetTimer();
 		r.log(LOG_INIT + "teleopInit()");
 
-		r.log("calibrating IMU zero degree heading to: " + String.valueOf(r.imu().getHeadingMvgAvg90()));
-		r.imu().calibrateZeroHeading();
+		if (imuZeroHeadingCalibrationIsReset) {
+			r.log("calibrating IMU zero degree heading to: " + String.valueOf(r.imu().getHeadingMvgAvg90()));
+			r.imu().calibrateZeroHeading();
+			imuZeroHeadingCalibrationIsReset = false;
+		} else {
+			r.log("IMU already calibrated, continue using existing calibration");
+		}
 
 		teleop = new TeleopWorker(r);
 		teleop.init();
