@@ -145,7 +145,7 @@ public class MotorHelper {
 		previousSpeed[motorNumber] = effectiveSpeed;
 
 		motors.get(motorNumber).set(effectiveSpeed);
-		SmartDashboard.putNumber("effectiveSpeed", effectiveSpeed);
+		
 
 	}
 
