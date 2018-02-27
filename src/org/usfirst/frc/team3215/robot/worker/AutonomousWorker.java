@@ -2,6 +2,7 @@ package org.usfirst.frc.team3215.robot.worker;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team3215.robot.MotorHelper;
 import org.usfirst.frc.team3215.robot.config.RobotHardware;
 import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
 import org.usfirst.frc.team3215.robot.libraries.ExceptionHelper;
@@ -109,9 +110,18 @@ public class AutonomousWorker {
 				// 2 second delay
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 2000));
 
-				// quick drive forward (200ms)
-				plan.add(new Action(1, 200));
-				plan.add(new Action(ACTION_HALT_AND_WAIT, 2000));
+				plan.add(new Action(1, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(2, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(3, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(4, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(5, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(6, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 
 				/*
 				 * TODO add more tests here (e.g. drive back, left, right, turn left, right;
@@ -153,6 +163,51 @@ public class AutonomousWorker {
 			case 1: // drive forward at 50% speed
 				r.motors().drive(0, 0.5, 0, 1);
 				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 2: // drive backwards at 50%
+				r.motors().drive(180, 0.5, 180, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 3: // drive right at 50%
+				r.motors().drive(270, 0.5, 270, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 4: // drive left at 50%
+				r.motors().drive(90, 0.5, 90, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 5: // point at 240 drive at 60 at 50%
+				r.motors().drive(60, 0.5, 240, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 6: // point at 120 drive at 300 at 50%
+				r.motors().drive(300, 0.5, 120, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 7: // opposite drive to case 5
+				r.motors().drive(240, 0.5, 60, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 8: // opposite drive to case 6
+				r.motors().drive(120, 0.5, 300, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 9: // cubie intake
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, -1.0);
+				r.motors().haltDriveMotorsPeriodic();
+				break;
+
+			case 10: // cubie output
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, 1.0);
+				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			// TODO #JK add many new action types here

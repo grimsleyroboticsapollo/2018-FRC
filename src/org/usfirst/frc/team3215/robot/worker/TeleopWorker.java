@@ -68,11 +68,11 @@ public class TeleopWorker {
 				r.motors().linear(MotorHelper.CUBIE_INTAKE, 0);
 			}
 
-			boolean joy1startButton = r.joystick1().getRawButton(8);
-			boolean joy1backButton = r.joystick1().getRawButton(7);
-			if (joy1startButton) {
+			boolean joy1ExtendCubie = (r.joystick1().getPOV() == 270);
+			boolean joy1RetractCubie = (r.joystick1().getPOV() == 90);
+			if (joy1ExtendCubie) {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 1.0);
-			} else if (joy1backButton) {
+			} else if (joy1RetractCubie) {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, -1.0);
 			} else {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 0);
