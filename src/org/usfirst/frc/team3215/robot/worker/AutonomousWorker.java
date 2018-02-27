@@ -122,7 +122,14 @@ public class AutonomousWorker {
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				plan.add(new Action(6, 1000));
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
-
+				plan.add(new Action(7, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(8, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(9, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(10, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				/*
 				 * TODO add more tests here (e.g. drive back, left, right, turn left, right;
 				 * other motors)
