@@ -35,10 +35,10 @@ public class MotorHelper {
 		this.r = r;
 
 		// initialize motors
-		motors.add(0, new Spark(0)); // Front-left Mecanum connected to PWM port 0
-		motors.add(1, new Spark(1)); // Rear-left Mecanum connected to PWM port 1
-		motors.add(2, new Spark(2)); // Front-right Mecanum connected to PWM port 2
-		motors.add(3, new Spark(3)); // Rear-right Mecanum connected to PWM port 3
+		motors.add(0, new Victor(0)); // Front-left Mecanum connected to PWM port 0
+		motors.add(1, new Victor(1)); // Rear-left Mecanum connected to PWM port 1
+		motors.add(2, new Victor(2)); // Front-right Mecanum connected to PWM port 2
+		motors.add(3, new Victor(3)); // Rear-right Mecanum connected to PWM port 3
 		motors.add(4, new Victor(4));
 		motors.add(5, new Victor(5));
 		motors.add(6, new Victor(6));
@@ -145,7 +145,6 @@ public class MotorHelper {
 		previousSpeed[motorNumber] = effectiveSpeed;
 
 		motors.get(motorNumber).set(effectiveSpeed);
-		
 
 	}
 
