@@ -135,14 +135,7 @@ public class AutonomousWorker {
 				plan.add(new Action(12, 1000));
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				break;
-
-				/*
-				 * TODO add more tests here (e.g. drive back, left, right, turn left, right;
-				 * other motors)
-				 */
-
-				break;
-
+				
 			case NOTHING:
 				// do nothing at all
 				break;
@@ -203,12 +196,12 @@ public class AutonomousWorker {
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
-			case 7: // opposite drive to case 5
+			case 7: // point to 60 drive to 240 at 50%
 				r.motors().drive(240, 0.5, 60, 1);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
-			case 8: // opposite drive to case 6
+			case 8: // point to 300 drive to 120 at 50%
 				r.motors().drive(120, 0.5, 300, 1);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
