@@ -21,7 +21,7 @@ public class MotorHelper {
 	public final static int CUBIE_DEPLOY = 5;
 	public final static int CUBIE_INTAKE = 6;
 	public final static int WINCH = 7;
-	public final static double THRESHOLD_ANGLE = 20;
+	public final static double THRESHOLD_ANGLE = 30;
 	public final static double SPEED_INCREMENT = 0.1;
 	private final RobotHardware r;
 
@@ -111,12 +111,12 @@ public class MotorHelper {
 
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
 
-			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
+			effectiveTurnSpeed = -turnSpeed * angleDifference / THRESHOLD_ANGLE;
 		} else {
-			effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
+			effectiveTurnSpeed = -turnSpeed * Math.signum(angleDifference);
 		}
 		// Maybe implement check to prevent motor brownout
-		mecanumDrive.drivePolar(driveSpeed, targetDriveDirection - currentAngle, -effectiveTurnSpeed);
+		mecanumDrive.drivePolar(driveSpeed, -targetDriveDirection + currentAngle, -effectiveTurnSpeed);
 	}
 
 	/**
