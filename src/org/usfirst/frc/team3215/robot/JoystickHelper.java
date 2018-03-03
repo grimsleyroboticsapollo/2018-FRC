@@ -197,6 +197,9 @@ public class JoystickHelper {
 			
 			targetOrientationAngle = -joy0angle;
 			turnSpeed = joy0speed / speedFactor;
+		} else if (joy0speed > JOY_THRESHOLD) {
+			
+			turnSpeed = joy0speed / speedFactor;
 		} else if ((joy0leftTrigger > JOY_THRESHOLD) || (joy0rightTrigger > JOY_THRESHOLD)) {
 			
 			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() - effectiveTrigger * TRIGGER_SCALING_FACTOR;
