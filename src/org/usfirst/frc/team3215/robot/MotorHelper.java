@@ -22,15 +22,7 @@ public class MotorHelper {
 	public final static int CUBIE_INTAKE = 6;
 	public final static int WINCH = 7;
 
-        // TODO #JK
-        // During testing the frankenbot overshot when doing a fast turn,
-        // resulting in a wobble. We took care of most of it by increasing
-        // the following THRESHOLD_ANGLE from 20 to 30. There is a slight
-        // wobble left so it needs to be increased some more. Then, factoring
-        // in that the real bot will be heavier we might give it another nudge.
-        // So, I recommend increasing it from 30 to something between 35 and 40
-        // degrees:
-	public final static double THRESHOLD_ANGLE = 30;
+	public final static double THRESHOLD_ANGLE = 40;
 	public final static double SPEED_INCREMENT = 0.1;
 	private final RobotHardware r;
 
@@ -44,14 +36,11 @@ public class MotorHelper {
 		this.r = r;
 
 		// initialize motors
-                // TODO #JK
-                // The first four motors (indexed 0, 1, 2, and 3) need to be changed
-                // from "... new Victor(..." to "... new Spark(..." because we're using
-                // Spark motor controllers on the real bot (but Victor on frankenbot):
-		motors.add(0, new Victor(0)); // Front-left Mecanum connected to PWM port 0
-		motors.add(1, new Victor(1)); // Rear-left Mecanum connected to PWM port 1
-		motors.add(2, new Victor(2)); // Front-right Mecanum connected to PWM port 2
-		motors.add(3, new Victor(3)); // Rear-right Mecanum connected to PWM port 3
+
+		motors.add(0, new Spark(0)); // Front-left Mecanum connected to PWM port 0
+		motors.add(1, new Spark(1)); // Rear-left Mecanum connected to PWM port 1
+		motors.add(2, new Spark(2)); // Front-right Mecanum connected to PWM port 2
+		motors.add(3, new Spark(3)); // Rear-right Mecanum connected to PWM port 3
 		motors.add(4, new Victor(4));
 		motors.add(5, new Victor(5));
 		motors.add(6, new Victor(6));
@@ -122,21 +111,14 @@ public class MotorHelper {
 		double angleDifference = AnglesHelper.getAngleDifference(currentAngle, targetOrientationAngle);
 		double effectiveTurnSpeed = turnSpeed;
 
-                // TODO #JK
-                // The logic here works well, but what happens at really big angle differences
-                // is that the robot executes somewhat of a three point turn (as opposed to
-                // first turning towards the direction it needs to go and then speeding up).
-                // Therefore, implement a cutoff angle before starting to drive. Easiest
-                // implementation: If the angleDifference is greater than the already existing
-                // THRESHOLD angle, then force driveSpeed = 0. Alternatively, implement a different
-                // drive threshold angle, and/or ramp up the drive speed proportionally to the
-                // threshold angle.
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
 
 			effectiveTurnSpeed = -turnSpeed * angleDifference / THRESHOLD_ANGLE;
 		} else {
 			effectiveTurnSpeed = -turnSpeed * Math.signum(angleDifference);
+			driveSpeed = 0;
 		}
+
 		// Maybe implement check to prevent motor brownout
 		mecanumDrive.drivePolar(driveSpeed, -targetDriveDirection + currentAngle, -effectiveTurnSpeed);
 	}
