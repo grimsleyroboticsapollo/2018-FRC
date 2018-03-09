@@ -138,6 +138,12 @@ public class AutonomousWorker {
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				plan.add(new Action(14, 1000));
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(15, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(16, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(17, 100));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				break;
 
 			case NOTHING:
@@ -230,17 +236,27 @@ public class AutonomousWorker {
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
-			case 13: // extend cubie
+			case 13: // point to 300 go to 300 50% speed
+				r.motors().drive(300, .5, 300, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 14: // point to 60 go to 60 50% speed
+				r.motors().drive(60, .5, 60, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 15: // extend cubie
 				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
-			case 14: // retract cubie
+			case 16: // retract cubie
 				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, -1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
-			case 15: // power winch
+			case 17: // power winch
 				r.motors().linearSingle(MotorHelper.WINCH, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
