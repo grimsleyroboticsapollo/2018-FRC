@@ -7,6 +7,8 @@ import org.usfirst.frc.team3215.robot.config.RobotHardware;
 import org.usfirst.frc.team3215.robot.libraries.DiagnosticLightHelper;
 import org.usfirst.frc.team3215.robot.libraries.ExceptionHelper;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutonomousWorker {
 
 	private final RobotHardware r;
@@ -59,6 +61,32 @@ public class AutonomousWorker {
 	 */
 	public void init() {
 		r.log("init() - selected autonomous: " + r.selectedAutonomous().toString());
+
+		// From https://www.chiefdelphi.com/forums/showthread.php?p=1741663:
+		//
+		// Game data is provided in the next line of code, and is specified in the
+		// following format: As viewed from the driver station, the first character is
+		// the switch our team owns ('L' means we own the left switch, 'R' means we own
+		// the right switch). The second character is which side of the scale we own.
+		// The third character is which side of the far switch we own ('L' or 'R').
+		String gameData = DriverStation.getInstance().getGameSpecificMessage();
+
+		// defensive coding: never trust remote inputs; make SURE it's three characters:
+		if (gameData == null) {
+			r.log("warning: game data is null; forcing 'LLL' just so that autonomous doesn't crash");
+			gameData = "LLL";
+		} else if (gameData.length() < 3) {
+			r.log("warning: game data length is less than 3 ('" + gameData
+					+ "'); appending LLL just so that autonomous doesn't crash");
+			gameData += "LLL";
+		}
+		gameData = gameData.toUpperCase();
+
+		// now that we are sure it's three characters, evaluate:
+		r.log("game data found: " + gameData);
+		boolean ourSwitchIsLeft = (gameData.charAt(0) == 'L');
+		boolean scaleIsLeft = (gameData.charAt(1) == 'L');
+		boolean theirSwitchIsLeft = (gameData.charAt(2) == 'L');
 
 		try {
 
@@ -142,7 +170,7 @@ public class AutonomousWorker {
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				plan.add(new Action(16, 1000));
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
-				plan.add(new Action(17, 100));
+				plan.add(new Action(17, 100)); // just nick it (ratchet)
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				break;
 
