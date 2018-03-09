@@ -68,8 +68,10 @@ public class TeleopWorker {
 				r.motors().linear(MotorHelper.CUBIE_INTAKE, 0);
 			}
 
-			boolean joy1ExtendCubie = (r.joystick1().getPOV() == 270);
-			boolean joy1RetractCubie = (r.joystick1().getPOV() == 90);
+			int joy1POV = r.joystick1().getPOV();
+
+			boolean joy1ExtendCubie = (joy1POV == 270) || (joy1POV == 225) || (joy1POV == 315);
+			boolean joy1RetractCubie = (joy1POV == 90) || (joy1POV == 45) || (joy1POV == 135);
 			if (joy1ExtendCubie) {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 1.0);
 			} else if (joy1RetractCubie) {
@@ -78,8 +80,8 @@ public class TeleopWorker {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 0);
 			}
 
-			boolean joy1liftUpButton = (r.joystick1().getPOV() == 0);
-			boolean joy1liftDownButton = (r.joystick1().getPOV() == 180);
+			boolean joy1liftUpButton = (joy1POV == 0) || (joy1POV == 315) || (joy1POV == 45);
+			boolean joy1liftDownButton = (joy1POV == 180) || (joy1POV == 135) || (joy1POV == 225);
 			if (joy1liftUpButton) {
 				r.motors().linear(MotorHelper.LIFT, 1.0);
 			} else if (joy1liftDownButton) {

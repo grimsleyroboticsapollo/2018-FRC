@@ -154,4 +154,37 @@ public class MotorHelper {
 
 	}
 
+	/**
+	 * Given a motor controller number and speed, drives that motor. This function
+	 * implements gradual ramp-up / -down to avoid jerking. Also stops all other
+	 * linear motors to avoid not stopping a linear motor from a previous autonomous
+	 * action.
+	 * 
+	 * @param motorNumber
+	 *            The PWM port the motor controller is connected to.
+	 * @param speed
+	 *            The (target) speed at which to drive that motor, between -1. and
+	 *            1.
+	 */
+	public void linearSingle(int motorNumber, double speed) {
+
+		// (1) drive the linear motor
+		linear(motorNumber, speed);
+
+		// (2) stop all others
+		if (motorNumber != LIFT) {
+			linear(LIFT, 0);
+		}
+		if (motorNumber != WINCH) {
+			linear(WINCH, 0);
+		}
+		if (motorNumber != CUBIE_DEPLOY) {
+			linear(CUBIE_DEPLOY, 0);
+		}
+		if (motorNumber != CUBIE_INTAKE) {
+			linear(CUBIE_INTAKE, 0);
+		}
+
+	}
+
 }

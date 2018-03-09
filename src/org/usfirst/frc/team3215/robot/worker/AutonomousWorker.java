@@ -134,8 +134,12 @@ public class AutonomousWorker {
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				plan.add(new Action(12, 1000));
 				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(13, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
+				plan.add(new Action(14, 1000));
+				plan.add(new Action(ACTION_HALT_AND_WAIT, 1000));
 				break;
-				
+
 			case NOTHING:
 				// do nothing at all
 				break;
@@ -207,22 +211,37 @@ public class AutonomousWorker {
 				break;
 
 			case 9: // cube in-take
-				r.motors().linear(MotorHelper.CUBIE_INTAKE, -1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, -1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 10: // cube output
-				r.motors().linear(MotorHelper.CUBIE_INTAKE, 1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 11: // lift up
-				r.motors().linear(MotorHelper.LIFT, 1.0);
+				r.motors().linearSingle(MotorHelper.LIFT, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 12: // lift down
-				r.motors().linear(MotorHelper.LIFT, -1.0);
+				r.motors().linearSingle(MotorHelper.LIFT, -1.0);
+				r.motors().haltDriveMotorsPeriodic();
+				break;
+
+			case 13: // extend cubie
+				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, 1.0);
+				r.motors().haltDriveMotorsPeriodic();
+				break;
+
+			case 14: // retract cubie
+				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, -1.0);
+				r.motors().haltDriveMotorsPeriodic();
+				break;
+
+			case 15: // power winch
+				r.motors().linearSingle(MotorHelper.WINCH, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
