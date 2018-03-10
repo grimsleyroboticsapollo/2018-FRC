@@ -102,7 +102,7 @@ public class AutonomousWorker {
 			// --- when robot is standing on the LEFT side:
 			case LEFT_DRIVE_AND_DROP:
 				plan.add(new Action(1, 2000));
-				if(ourSwitchIsLeft) {
+				if (ourSwitchIsLeft) {
 					plan.add(new Action(15, 500));
 					plan.add(new Action(11, 500));
 					plan.add(new Action(21, 1000));
@@ -112,7 +112,6 @@ public class AutonomousWorker {
 
 			case LEFT_DRIVE_FORWARD:
 				plan.add(new Action(18, 2000));
-
 				break;
 
 			// --- when robot is standing in the MIDDLE:
@@ -125,8 +124,7 @@ public class AutonomousWorker {
 					plan.add(new Action(11, 500));
 					plan.add(new Action(21, 1000));
 					plan.add(new Action(10, 2000));
-				}
-				else {
+				} else {
 					plan.add(new Action(13, 2000));
 					plan.add(new Action(1, 800));
 					plan.add(new Action(15, 500));
@@ -151,10 +149,9 @@ public class AutonomousWorker {
 			// --- when robot is standing on the RIGHT side:
 			case RIGHT_DRIVE_AND_DROP:
 				plan.add(new Action(1, 2000));
-				if(ourSwitchIsLeft){
-					
-				}
-				else {
+				if (ourSwitchIsLeft) {
+					// stop
+				} else {
 					plan.add(new Action(15, 500));
 					plan.add(new Action(11, 500));
 					plan.add(new Action(22, 1000));
@@ -164,7 +161,6 @@ public class AutonomousWorker {
 
 			case RIGHT_DRIVE_FORWARD:
 				plan.add(new Action(19, 2000));
-
 				break;
 
 			// --- special functions:
@@ -348,8 +344,6 @@ public class AutonomousWorker {
 				r.motors().drive(90, 0.20, 90, 0.30);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
-
-			// TODO #JK add many new action types here
 
 			/*
 			 * Example of an action that is only to be executed once:
