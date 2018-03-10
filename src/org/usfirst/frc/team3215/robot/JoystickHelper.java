@@ -28,7 +28,7 @@ public class JoystickHelper {
 	private final static double SLOW_FACTOR = 3.;
 	private final static double REGULAR_FACTOR = 2.;
 	private final static double FAST_FACTOR = 1.;
-	private final static double TRIGGER_SCALING_FACTOR = 5;
+	private final static double TRIGGER_SCALING_FACTOR = 15;
 	private boolean turnAsYouGo = true;
 
 	private final static double RAD_TO_DEGREES = 180. / Math.PI;
