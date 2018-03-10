@@ -209,8 +209,7 @@ public class JoystickHelper {
 			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() + joy1rightX * TRIGGER_SCALING_FACTOR;
 			turnSpeed = Math.abs(joy1rightX);
 		} else {
-			
-			turnSpeed = 0;
+			targetOrientationAngle = r.imu().getHeadingMvgAvg90();
 		}
 		
 		// Turn as you go
