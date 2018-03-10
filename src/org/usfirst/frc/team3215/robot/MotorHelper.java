@@ -23,6 +23,7 @@ public class MotorHelper {
 	public final static int WINCH = 7;
 
 	public final static double THRESHOLD_ANGLE = 40;
+	private final static double DEGREES_TO_RAD = Math.PI / 180.;
 	public final static double SPEED_INCREMENT = 0.1;
 	private final RobotHardware r;
 
@@ -118,7 +119,10 @@ public class MotorHelper {
 			effectiveTurnSpeed = -turnSpeed * Math.signum(angleDifference);
 			driveSpeed = 0;
 		}
-
+		if (Math.abs(effectiveTurnSpeed) < 0.05) {
+			driveSpeed = driveSpeed
+					* (2. - Math.cos(DEGREES_TO_RAD * angleDifference) * Math.cos(DEGREES_TO_RAD * angleDifference));
+		}
 		// Maybe implement check to prevent motor brownout
 		mecanumDrive.drivePolar(driveSpeed, -targetDriveDirection + currentAngle, -effectiveTurnSpeed);
 	}
