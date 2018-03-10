@@ -101,16 +101,20 @@ public class AutonomousWorker {
 
 			// --- when robot is standing on the LEFT side:
 			case LEFT_DRIVE_AND_DROP:
-				plan.add(new Action(1, 2000));
 				if (ourSwitchIsLeft) {
+					plan.add(new Action(1, 2000));
 					plan.add(new Action(15, 500));
 					plan.add(new Action(11, 500));
 					plan.add(new Action(21, 1000));
 					plan.add(new Action(10, 2000));
+				} else {
+					plan.add(new Action(0, 10000));
+					plan.add(new Action(1, 2000));
 				}
-				break;
-
+				break; 
+				
 			case LEFT_DRIVE_FORWARD:
+				plan.add(new Action(0, 10000));
 				plan.add(new Action(18, 2000));
 				break;
 
@@ -135,12 +139,14 @@ public class AutonomousWorker {
 				break;
 
 			case MIDDLE_DRIVE_TO_LEFT:
+				plan.add(new Action(0, 10000));
 				plan.add(new Action(1, 200));
 				plan.add(new Action(5, 2000));
 				plan.add(new Action(20, 800));
 				break;
 
 			case MIDDLE_DRIVE_TO_RIGHT:
+				plan.add(new Action(0, 10000));
 				plan.add(new Action(1, 200));
 				plan.add(new Action(6, 2000));
 				plan.add(new Action(20, 800));
@@ -148,9 +154,9 @@ public class AutonomousWorker {
 
 			// --- when robot is standing on the RIGHT side:
 			case RIGHT_DRIVE_AND_DROP:
-				plan.add(new Action(1, 2000));
 				if (ourSwitchIsLeft) {
-					// stop
+					plan.add(new Action(0, 10000));
+					plan.add(new Action(1, 2000));
 				} else {
 					plan.add(new Action(15, 500));
 					plan.add(new Action(11, 500));
@@ -160,6 +166,7 @@ public class AutonomousWorker {
 				break;
 
 			case RIGHT_DRIVE_FORWARD:
+				plan.add(new Action(0, 10000));
 				plan.add(new Action(19, 2000));
 				break;
 
