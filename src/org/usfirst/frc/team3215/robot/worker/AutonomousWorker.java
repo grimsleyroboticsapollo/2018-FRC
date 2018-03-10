@@ -96,40 +96,75 @@ public class AutonomousWorker {
 			currentActionStopTime = 0;
 			currentAction = null;
 
-			// TODO implement reading a field for initial delay
-
 			// depending on which autonomous is selected, make a corresponding plan
 			switch (r.selectedAutonomous()) {
 
 			// --- when robot is standing on the LEFT side:
 			case LEFT_DRIVE_AND_DROP:
-				// TODO
+				plan.add(new Action(1, 2000));
+				if(ourSwitchIsLeft) {
+					plan.add(new Action(15, 500));
+					plan.add(new Action(11, 500));
+					plan.add(new Action(21, 1000));
+					plan.add(new Action(10, 2000));
+				}
 				break;
 
 			case LEFT_DRIVE_FORWARD:
-				// TODO
+				plan.add(new Action(18, 2000));
+
 				break;
 
 			// --- when robot is standing in the MIDDLE:
 			case MIDDLE_DRIVE_AND_DROP:
-				// TODO
+				plan.add(new Action(1, 200));
+				if (ourSwitchIsLeft) {
+					plan.add(new Action(14, 2000));
+					plan.add(new Action(1, 800));
+					plan.add(new Action(15, 500));
+					plan.add(new Action(11, 500));
+					plan.add(new Action(21, 1000));
+					plan.add(new Action(10, 2000));
+				}
+				else {
+					plan.add(new Action(13, 2000));
+					plan.add(new Action(1, 800));
+					plan.add(new Action(15, 500));
+					plan.add(new Action(11, 500));
+					plan.add(new Action(22, 1000));
+					plan.add(new Action(10, 2000));
+				}
 				break;
 
 			case MIDDLE_DRIVE_TO_LEFT:
-				// TODO
+				plan.add(new Action(1, 200));
+				plan.add(new Action(5, 2000));
+				plan.add(new Action(20, 800));
 				break;
 
 			case MIDDLE_DRIVE_TO_RIGHT:
-				// TODO
+				plan.add(new Action(1, 200));
+				plan.add(new Action(6, 2000));
+				plan.add(new Action(20, 800));
 				break;
 
 			// --- when robot is standing on the RIGHT side:
 			case RIGHT_DRIVE_AND_DROP:
-				// TODO
+				plan.add(new Action(1, 2000));
+				if(ourSwitchIsLeft){
+					
+				}
+				else {
+					plan.add(new Action(15, 500));
+					plan.add(new Action(11, 500));
+					plan.add(new Action(22, 1000));
+					plan.add(new Action(10, 2000));
+				}
 				break;
 
 			case RIGHT_DRIVE_FORWARD:
-				// TODO
+				plan.add(new Action(19, 2000));
+
 				break;
 
 			// --- special functions:
@@ -287,6 +322,31 @@ public class AutonomousWorker {
 			case 17: // power winch
 				r.motors().linearSingle(MotorHelper.WINCH, 1.0);
 				r.motors().haltDriveMotorsPeriodic();
+				break;
+
+			case 18: // point to 10 drive to 10 at 50%
+				r.motors().drive(10, 0.5, 10, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 19: // point to 350 drive to 350 at 50%
+				r.motors().drive(350, 0.5, 350, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 20: // point to 180 drive to 0 at 50%
+				r.motors().drive(0, 0.5, 180, 1);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 21: // point to 270 at 30% drive to 270 at 20%
+				r.motors().drive(270, 0.20, 270, 0.30);
+				r.motors().haltLinearMotorsPeriodic();
+				break;
+
+			case 22: // point to 90 at 30% drive to 90 at 20%
+				r.motors().drive(90, 0.20, 90, 0.30);
+				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			// TODO #JK add many new action types here
