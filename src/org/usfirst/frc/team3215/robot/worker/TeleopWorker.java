@@ -73,9 +73,9 @@ public class TeleopWorker {
 			boolean joy1ExtendCubie = (joy1POV == 270) || (joy1POV == 225) || (joy1POV == 315);
 			boolean joy1RetractCubie = (joy1POV == 90) || (joy1POV == 45) || (joy1POV == 135);
 			if (joy1ExtendCubie) {
-				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 1.0);
+				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 0.3);
 			} else if (joy1RetractCubie) {
-				r.motors().linear(MotorHelper.CUBIE_DEPLOY, -1.0);
+				r.motors().linear(MotorHelper.CUBIE_DEPLOY, -0.3);
 			} else {
 				r.motors().linear(MotorHelper.CUBIE_DEPLOY, 0);
 			}
