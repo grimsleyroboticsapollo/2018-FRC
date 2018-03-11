@@ -8,6 +8,7 @@ import org.usfirst.frc.team3215.robot.libraries.ExceptionHelper;
 public class TeleopWorker {
 	private final static int AXIS_TRIGGER_LEFT = 2;
 	private final static int AXIS_TRIGGER_RIGHT = 3;
+	private boolean constantIntake = false;
 
 	private final RobotHardware r;
 	private JoystickHelper joysticks;
@@ -61,11 +62,15 @@ public class TeleopWorker {
 			boolean joy1leftBumper = r.joystick1().getRawButton(5);
 			boolean joy1rightBumper = r.joystick1().getRawButton(6);
 			if (joy1leftBumper) {
-				r.motors().linear(MotorHelper.CUBIE_INTAKE, 1.0);
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, .5);
+				constantIntake = false;
 			} else if (joy1rightBumper) {
-				r.motors().linear(MotorHelper.CUBIE_INTAKE, -1.0);
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, -0.5);
+				constantIntake = true;
+			} else if (constantIntake == false) {
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, 0.0);
 			} else {
-				r.motors().linear(MotorHelper.CUBIE_INTAKE, 0);
+				r.motors().linear(MotorHelper.CUBIE_INTAKE, -0.1);
 			}
 
 			int joy1POV = r.joystick1().getPOV();
