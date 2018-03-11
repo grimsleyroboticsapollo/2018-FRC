@@ -114,8 +114,8 @@ public class AutonomousWorker {
 				break; 
 				
 			case LEFT_DRIVE_FORWARD:
-				plan.add(new Action(0, 10000));
-				plan.add(new Action(18, 3000));
+				plan.add(new Action(0, 8000));
+				plan.add(new Action(18, 5000));
 				break;
 
 			// --- when robot is standing in the MIDDLE:
@@ -139,17 +139,17 @@ public class AutonomousWorker {
 				break;
 
 			case MIDDLE_DRIVE_TO_LEFT:
-				plan.add(new Action(0, 8000));
+				plan.add(new Action(0, 5200));
 				plan.add(new Action(1, 200));
-				plan.add(new Action(5, 4000));
-				plan.add(new Action(20, 1600));
+				plan.add(new Action(5, 6000));
+				plan.add(new Action(20, 2400));
 				break;
 
 			case MIDDLE_DRIVE_TO_RIGHT:
-				plan.add(new Action(0, 8000));
+				plan.add(new Action(0, 6200));
 				plan.add(new Action(1, 200));
-				plan.add(new Action(6, 4000));
-				plan.add(new Action(20, 1600));
+				plan.add(new Action(6, 5000));
+				plan.add(new Action(20, 2300));
 				break;
 
 			// --- when robot is standing on the RIGHT side:
@@ -166,8 +166,8 @@ public class AutonomousWorker {
 				break;
 
 			case RIGHT_DRIVE_FORWARD:
-				plan.add(new Action(0, 10000));
-				plan.add(new Action(19, 3000));
+				plan.add(new Action(0, 8000));
+				plan.add(new Action(19, 5000));
 				break;
 
 			// --- special functions:
