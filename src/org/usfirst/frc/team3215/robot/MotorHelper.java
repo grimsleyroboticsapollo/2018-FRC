@@ -91,7 +91,7 @@ public class MotorHelper {
 
 	/**
 	 * Have the robot drive into a given direction, at a given speed, and have it
-	 * orient towards a given angle, at a given rate of turne.
+	 * orient towards a given angle, at a given rate of turn.
 	 * 
 	 * @param targetDriveDirection
 	 *            The direction into which to drive (in field orientation). Forward
@@ -110,21 +110,22 @@ public class MotorHelper {
 
 		double currentAngle = r.imu().getHeadingBestTwoOfThree();
 		double angleDifference = AnglesHelper.getAngleDifference(currentAngle, targetOrientationAngle);
-		double effectiveTurnSpeed = turnSpeed;
+		double effectiveTurnSpeed;
 
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
 
-			effectiveTurnSpeed = -turnSpeed * angleDifference / THRESHOLD_ANGLE;
+			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
 		} else {
-			effectiveTurnSpeed = -turnSpeed * Math.signum(angleDifference);
+			effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
 			driveSpeed = 0;
 		}
-		if (Math.abs(effectiveTurnSpeed) < 0.05) {
+		double robotDriveDirection = -targetDriveDirection + currentAngle;
+		if (Math.abs(effectiveTurnSpeed) < 0.05) { 
 			driveSpeed = driveSpeed
-					* (2. - Math.cos(DEGREES_TO_RAD * angleDifference) * Math.cos(DEGREES_TO_RAD * angleDifference));
+					* (2. - Math.cos(DEGREES_TO_RAD * robotDriveDirection) * Math.cos(DEGREES_TO_RAD * robotDriveDirection));
 		}
 		// Maybe implement check to prevent motor brownout
-		mecanumDrive.drivePolar(driveSpeed, -targetDriveDirection + currentAngle, -effectiveTurnSpeed);
+		mecanumDrive.drivePolar(driveSpeed, robotDriveDirection, -effectiveTurnSpeed);
 	}
 
 	/**

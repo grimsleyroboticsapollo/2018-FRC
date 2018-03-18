@@ -172,7 +172,7 @@ public class JoystickHelper {
 
 		if (joy0speed > JOY_THRESHOLD) {
 
-			targetDriveDirection = -joy0angle;
+			targetDriveDirection = joy0angle;
 			driveSpeed = joy0speed / speedFactor;
 		} else if (r.joystick0().getPOV() >= 0) {
 
@@ -191,22 +191,24 @@ public class JoystickHelper {
 	
 		if (joy0rightSpeed > JOY_THRESHOLD) {
 			
-			targetOrientationAngle = -joy0rightAngle;
+			targetOrientationAngle = joy0rightAngle;
 			turnSpeed = joy0rightSpeed / speedFactor;
 		} else if ((joy0speed > JOY_THRESHOLD) && turnAsYouGo) {
 			
-			targetOrientationAngle = -joy0angle;
+			targetOrientationAngle = joy0angle;
 			turnSpeed = joy0speed / speedFactor;
 		} else if (joy0speed > JOY_THRESHOLD) {
+			targetOrientationAngle = r.imu().getHeadingMvgAvg90();
+
 			
 			turnSpeed = joy0speed / speedFactor;
 		} else if ((joy0leftTrigger > JOY_THRESHOLD) || (joy0rightTrigger > JOY_THRESHOLD)) {
 			
-			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() - effectiveTrigger * TRIGGER_SCALING_FACTOR;
+			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() + effectiveTrigger * TRIGGER_SCALING_FACTOR;
 			turnSpeed = Math.abs(effectiveTrigger);
 		} else if (Math.abs(joy1rightX) > JOY_THRESHOLD) {
 			
-			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() + joy1rightX * TRIGGER_SCALING_FACTOR;
+			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() - joy1rightX * TRIGGER_SCALING_FACTOR;
 			turnSpeed = Math.abs(joy1rightX);
 		} else {
 			targetOrientationAngle = r.imu().getHeadingMvgAvg90();
@@ -232,8 +234,8 @@ public class JoystickHelper {
 		if (turnSpeed > 1.0)
 			turnSpeed = 1.;
 
-		if (turnSpeed < -1.0)
-			turnSpeed = -1.;
+		if (turnSpeed < .0)
+			turnSpeed = .0;
 
 		// (4) limit angle to within the angle convention [0, 360[
 		targetDriveDirection = AnglesHelper.getPlainAngle(targetDriveDirection);
