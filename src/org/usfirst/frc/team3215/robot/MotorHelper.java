@@ -22,7 +22,7 @@ public class MotorHelper {
 	public final static int CUBIE_INTAKE = 6;
 	public final static int WINCH = 7;
 
-	public final static double THRESHOLD_ANGLE = 40;
+	public final static double THRESHOLD_ANGLE = 40.;
 	private final static double DEGREES_TO_RAD = Math.PI / 180.;
 	public final static double SPEED_INCREMENT = 0.1;
 	private final RobotHardware r;
