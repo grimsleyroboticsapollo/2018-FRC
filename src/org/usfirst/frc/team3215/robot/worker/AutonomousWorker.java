@@ -243,82 +243,82 @@ public class AutonomousWorker {
 				break;
 
 			case 1: // drive forward at 50% speed
-				r.motors().drive(0, 0.5, 0, 1);
+				r.motors().drive(0, 0.5, 0, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 2: // drive backwards at 50%
-				r.motors().drive(180, 0.5, 180, 1);
+				r.motors().drive(180, 0.5, 180, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 3: // drive right at 50%
-				r.motors().drive(270, 0.5, 270, 1);
+				r.motors().drive(270, 0.5, 270, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 4: // drive left at 50%
-				r.motors().drive(90, 0.5, 90, 1);
+				r.motors().drive(90, 0.5, 90, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 5: // point at 240 drive at 60 at 50%
-				r.motors().drive(60, 0.5, 240, 1);
+				r.motors().drive(60, 0.5, 240, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 6: // point at 120 drive at 300 at 50%
-				r.motors().drive(300, 0.5, 120, 1);
+				r.motors().drive(300, 0.5, 120, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 7: // point to 60 drive to 240 at 50%
-				r.motors().drive(240, 0.5, 60, 1);
+				r.motors().drive(240, 0.5, 60, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 8: // point to 300 drive to 120 at 50%
-				r.motors().drive(120, 0.5, 300, 1);
+				r.motors().drive(120, 0.5, 300, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 9: // cube in-take
-				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, -1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, -0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 10: // cube output
-				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, 1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_INTAKE, 0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 11: // lift up
-				r.motors().linearSingle(MotorHelper.LIFT, 1.0);
+				r.motors().linearSingle(MotorHelper.LIFT, 0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 12: // lift down
-				r.motors().linearSingle(MotorHelper.LIFT, -1.0);
+				r.motors().linearSingle(MotorHelper.LIFT, -0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 13: // point to 300 go to 300 50% speed
-				r.motors().drive(300, .5, 300, 1);
+				r.motors().drive(300, .5, 300, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 14: // point to 60 go to 60 50% speed
-				r.motors().drive(60, .5, 60, 1);
+				r.motors().drive(60, .5, 60, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 15: // extend cubie
-				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, 1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, 0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
 			case 16: // retract cubie
-				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, -1.0);
+				r.motors().linearSingle(MotorHelper.CUBIE_DEPLOY, -0.5);
 				r.motors().haltDriveMotorsPeriodic();
 				break;
 
@@ -328,17 +328,17 @@ public class AutonomousWorker {
 				break;
 
 			case 18: // point to 10 drive to 10 at 50%
-				r.motors().drive(10, 0.5, 10, 1);
+				r.motors().drive(10, 0.5, 10, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 19: // point to 350 drive to 350 at 50%
-				r.motors().drive(350, 0.5, 350, 1);
+				r.motors().drive(350, 0.5, 350, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 
 			case 20: // point to 180 drive to 0 at 50%
-				r.motors().drive(0, 0.5, 180, 1);
+				r.motors().drive(0, 0.5, 180, 0.5);
 				r.motors().haltLinearMotorsPeriodic();
 				break;
 

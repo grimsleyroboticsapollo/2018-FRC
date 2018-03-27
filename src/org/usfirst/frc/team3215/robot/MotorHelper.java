@@ -113,16 +113,22 @@ public class MotorHelper {
 		double effectiveTurnSpeed;
 
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
-
-			effectiveTurnSpeed = turnSpeed * angleDifference / THRESHOLD_ANGLE;
+			if (Math.abs(angleDifference) > 10 && turnSpeed > 0.5) {
+				turnSpeed = 0.5;
+			} else if (Math.abs(angleDifference) > 1 && turnSpeed > 0.2) {
+				turnSpeed = 0.2;
+			} else if (Math.abs(angleDifference) <= 1) {
+				turnSpeed = 0;
+			}
 		} else {
-			effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
 			driveSpeed = 0;
 		}
+		effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
+
 		double robotDriveDirection = -targetDriveDirection + currentAngle;
-		if (Math.abs(effectiveTurnSpeed) < 0.05) { 
-			driveSpeed = driveSpeed
-					* (2. - Math.cos(DEGREES_TO_RAD * robotDriveDirection) * Math.cos(DEGREES_TO_RAD * robotDriveDirection));
+		if (Math.abs(effectiveTurnSpeed) < 0.05) {
+			driveSpeed = driveSpeed * (2.
+					- Math.cos(DEGREES_TO_RAD * robotDriveDirection) * Math.cos(DEGREES_TO_RAD * robotDriveDirection));
 		}
 		// Maybe implement check to prevent motor brownout
 		mecanumDrive.drivePolar(driveSpeed, robotDriveDirection, -effectiveTurnSpeed);
