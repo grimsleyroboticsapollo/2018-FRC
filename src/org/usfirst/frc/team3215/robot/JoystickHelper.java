@@ -206,10 +206,10 @@ public class JoystickHelper {
 			targetOrientationAngle = r.imu().getHeadingBestTwoOfThree() - joy1rightX * TRIGGER_SCALING_FACTOR;
 			turnSpeed = Math.abs(joy1rightX);
 		} else {
-
+			
 			targetOrientationAngle = r.imu().getHeadingMvgAvg90();
 			turnSpeed = driveSpeed;
-			// if the robot is driving (in robot orientation) try to hold the orientation
+				// if the robot is driving (in robot orientation) try to hold the orientation
 		}
 
 		// Turn as you go
