@@ -49,6 +49,10 @@ public class MotorHelper {
 
 		// initialize Mecanum library
 		// argument order: frontLeft, rearLeft, frontRight, rearRight
+		motors.get(0).setInverted(false);
+		motors.get(1).setInverted(false);
+		motors.get(2).setInverted(false);
+		motors.get(3).setInverted(false);
 		mecanumDrive = new MecanumDrive(motors.get(0), motors.get(1), motors.get(2), motors.get(3));
 	}
 
@@ -113,11 +117,15 @@ public class MotorHelper {
 		double effectiveTurnSpeed;
 
 		if (Math.abs(angleDifference) < THRESHOLD_ANGLE) {
-			if (Math.abs(angleDifference) > 10. && turnSpeed > 0.5) {
-				turnSpeed = 0.5;
-			} else if (Math.abs(angleDifference) > 1. && turnSpeed > 0.2) {
-				turnSpeed = 0.2;
-			} else if (Math.abs(angleDifference) <= 1.) {
+			if (Math.abs(angleDifference) > 10.) {
+				if (turnSpeed > 0.5) {
+					turnSpeed = 0.5;
+				}
+			} else if (Math.abs(angleDifference) > 1.) {
+				if (turnSpeed > 0.2) {
+					turnSpeed = 0.2;
+				}
+			} else {
 				turnSpeed = 0;
 			}
 		} else {
@@ -125,7 +133,7 @@ public class MotorHelper {
 		}
 		effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
 
-		double robotDriveDirection = -targetDriveDirection + currentAngle;
+		double robotDriveDirection = targetDriveDirection - currentAngle;
 		if (turnSpeed < 0.05) {
 			driveSpeed = driveSpeed * (2.
 					- Math.cos(DEGREES_TO_RAD * robotDriveDirection) * Math.cos(DEGREES_TO_RAD * robotDriveDirection));
@@ -133,9 +141,9 @@ public class MotorHelper {
 		if (driveSpeed > 1.0) {
 			driveSpeed = 1.0;
 		}
-		
+
 		// Maybe implement check to prevent motor brownout
-		
+
 		SmartDashboard.putNumber("mech_targetDriveDirection", ((int) (100 * targetDriveDirection)) / 100.);
 		SmartDashboard.putNumber("mech_targetOrientationAngle", ((int) (100 * targetOrientationAngle)) / 100.);
 		SmartDashboard.putNumber("mech_driveSpeed", ((int) (100 * driveSpeed)) / 100.);
