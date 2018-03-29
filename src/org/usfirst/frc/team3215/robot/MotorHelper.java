@@ -133,7 +133,7 @@ public class MotorHelper {
 		}
 		effectiveTurnSpeed = turnSpeed * Math.signum(angleDifference);
 
-		double robotDriveDirection = -targetDriveDirection + currentAngle;
+		double robotDriveDirection = targetDriveDirection - currentAngle;
 		if (turnSpeed < 0.05) {
 			driveSpeed = driveSpeed * (2.
 					- Math.cos(DEGREES_TO_RAD * robotDriveDirection) * Math.cos(DEGREES_TO_RAD * robotDriveDirection));

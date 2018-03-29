@@ -67,7 +67,7 @@ public class ImuThread extends Thread {
 
 					headingPrev2 = headingPrev1;
 					headingPrev1 = heading;
-					heading = imu.getHeading() - customCalibrationOffset;
+					heading = -imu.getHeading() - customCalibrationOffset;
 
 					// calculate the fast-moving exponential average
 					headingMvgAvg50 = headingMvgAvg50 * 0.5 + heading * 0.5;
